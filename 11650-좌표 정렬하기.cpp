@@ -24,7 +24,7 @@ int main(void) {
 	for (int i = 0; i < count; i++) {
 		cin >> xy[i].x >> xy[i].y;
 	}
-	sort(xy, xy + count, cmp);	//¿©±â cmp¾´°Ô ÇÙ½ÉÀÎ°Å °°¾Æ¿°
+	sort(xy, xy + count, cmp);	//ì—¬ê¸° cmpì“´ê²Œ í•µì‹¬ì¸ê±° ê°™ì•„ì—¼
 	for (int i = 0; i < count; i++) {
 		cout << xy[i].x << " " << xy[i].y << "\n";
 	}
