@@ -1,0 +1,166 @@
+//#include <iostream>
+//#include <vector>
+//#include <cmath>
+//#include <algorithm>
+//
+//using namespace std;
+//
+//int count_plant;
+//int count_jump;
+//int current_count_jump = 0;
+//
+//typedef struct POINT {	//식물 좌표
+//	int x;
+//	int y;
+//}_POINT;
+//
+//vector<POINT> v;	//식물 좌표를 담을 vector
+//
+//
+//vector<char> Move;	//개구리가 움직일 방향
+//
+//POINT current_pos; //개구리의 좌표
+//
+//POINT pos_temp;	//입력받을때 쓰는거
+//
+//bool isFind = false;	//앞에 없으면 넘어가기위해서.
+//
+//int calculate_distance(const POINT &P1,const POINT &P2) {
+//	return pow(P1.x - P2.x, 2) + pow(P1.y - P2.y, 2);
+//	(x1-x)^2 + (y1-y)^2 리턴
+//}
+//
+//bool cnt(const POINT &P1, const POINT &P2) {	//거리가 짧은순으로 소팅하기위해서
+//	if (calculate_distance(current_pos, P1) < calculate_distance(current_pos, P2))
+//		return true;
+//	else
+//		return false;
+//}
+//
+//
+//int main(void) {
+//	ios::sync_with_stdio(false);
+//	cin.tie(0);
+//	cout.tie(0);
+//
+//	cin >> count_plant >> count_jump;
+//
+//	char temp;
+//
+//
+//	//////////////////////////////////	입력부분
+//	for (int i = 0; i < count_jump; i++) {	//점프 방향 입력
+//		cin >> temp;
+//		Move.push_back(temp);
+//	}
+//
+//	for (int i = 0; i < count_plant; i++) {	//식물의 좌표를 받음
+//		cin >> pos_temp.x >> pos_temp.y;
+//		if (i == 0)	//첫 좌표는 개구리의 좌표
+//		{
+//			current_pos.x = pos_temp.x;
+//			current_pos.y = pos_temp.y;
+//		}
+//		else {	//나머지는 백터안에 넣어두기
+//			v.push_back(pos_temp);
+//		}
+//	}
+//	//////////////////////////////////
+//
+//
+//
+//	for (int j = 0; j < Move.size();j++) {
+//		isFind = false;
+//		sort(v.begin(), v.end(), cnt);	//소팅을 한 후,
+//		vector<POINT>::iterator iter = v.begin();
+//
+//		if (Move[j] == 'A') {	//+ +
+//			for (int i = 0; i < v.size(); i++) {
+//				if (v[i].x - current_pos.x>0 && v[i].y - current_pos.y>0) {	//+ + 이면?
+//					current_pos = v[i];
+//					v.erase(iter + i);
+//					isFind = true;
+//					break; //바로 반복문 break;
+//				}
+//			}
+//		}
+//		else if (Move[j] == 'B') {	// + -
+//			for (int i = 0; i < v.size(); i++) {
+//				if (v[i].x - current_pos.x>0 && v[i].y - current_pos.y<0) {	//+ - 이면?
+//					current_pos = v[i];
+//					v.erase(iter + i);
+//					isFind = true;
+//					break;
+//				}
+//			}
+//		}
+//		else if (Move[j] == 'C') {	// - +
+//			for (int i = 0; i < v.size(); i++) {
+//				if (v[i].x - current_pos.x<0 && v[i].y - current_pos.y>0) {	//- + 이면?
+//					current_pos = v[i];
+//					v.erase(iter + i);
+//					isFind = true;
+//					break;
+//				}
+//			}
+//		}
+//		else if (Move[j] == 'D') {	// - -
+//			for (int i = 0; i < v.size(); i++) {
+//				if (v[i].x - current_pos.x<0 && v[i].y - current_pos.y<0) {	//- - 이면?
+//					current_pos = v[i];
+//					v.erase(iter + i);
+//					isFind = true;
+//					break;
+//				}
+//			}
+//		}
+//		if(!isFind) {
+//			continue;
+//		}
+//	
+//	}
+//
+//	cout << current_pos.x << " " << current_pos.y;
+//
+//	system("pause");
+//	return 0;
+//}
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <deque>
+
+using namespace std;
+
+int test_case;
+
+
+int main(void) {
+	ios::sync_with_stdio(false);
+
+	string s;
+	deque<char> left;
+	deque<char> right;
+
+	cin >> test_case;
+
+	for (int i = 0; i < test_case; i++) {
+		cin >> s;
+		for (int j = 0; i < s.length(); i++) {
+			if (s[j] == '<') {
+				if (right.empty();)
+			}
+			else if (s[j] == '>') {
+
+			}
+			else if (s[j] == '-') {
+
+			}
+		}
+	}
+
+
+	system("pause");
+	return 0;
+}
