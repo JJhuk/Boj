@@ -1,0 +1,51 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+
+using namespace std;
+
+
+int Alpa[26] = { 0 };	//a==0 z==25
+string input;
+int Max = 0;
+char Max_Char;
+bool find_Max = false;
+
+void Check(const char &a) {
+	if (a >= 'A'&&a <= 'Z') {	//대문자
+		Alpa[a - 'A']++;
+	}
+	else {
+		Alpa[a - 'a']++;
+	}
+}
+
+int main(void) {
+	cin >> input;
+
+	for (int i = 0; i <= input.length(); i++) {
+		Check(input[i]);
+	}
+	for (int i = 0; i <= 25; i++) {
+		Max = Max > Alpa[i] ? Max : Alpa[i];
+	}
+	for (int i = 0; i <= 25; i++) {
+		if (Max == Alpa[i]) {
+			if (!find_Max) {
+				Max_Char = i + 'A';
+				find_Max = true;
+			}
+			else {
+				cout << "?";
+				find_Max = false;
+				break;
+			}
+		}
+	}
+	if (find_Max)
+		cout << Max_Char;
+
+	system("pause");
+	return 0;
+}
