@@ -1,0 +1,23 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int main(void) {
+	int a, b, c;
+	int r;
+	string s;
+	int count[11] = { 0 };	//0~9 index자체가 수를 가리키는거임.
+
+	cin >> a >> b >> c;
+	r = a * b*c;
+	s = to_string(r); //a*b*c한 결과를 string으로 변환
+
+	for (int i = 0; i < s.length(); i++) {  
+		count[s[i] - '0']++;  //각 수한칸한칸에 - '0' 해주면 수가나옴.
+	}
+	for (int i = 0; i < 10; i++) {
+		cout << count[i] << "\n";
+	}
+	return 0;
+}
