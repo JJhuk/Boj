@@ -1,0 +1,32 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+
+using namespace std;
+
+string A, B;
+
+string change_string(const string &a) {
+	string temp = "";
+	for (int i = 2; i >= 0; i--)
+	{
+		temp += a[i];
+	}
+	return temp;
+}
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin >> A >> B;
+	A = change_string(A);
+	B = change_string(B);
+
+	if (atoi(A.c_str()) > atoi(B.c_str())) {
+		cout << A;
+	}
+	else
+		cout << B;
+	
+	return 0;
+}
