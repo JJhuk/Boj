@@ -1,0 +1,30 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+//A%B 는 A를 B로 나눈 나머지
+
+int temp[1001] = { 0 };
+
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	int input;
+	int Max = 0;  //temp에 1001인데 검사를 1001까지하면 비효율적이므로, Max까지 검사하게 함
+	int result = 0; //temp배열이 0이아닌수를 다 +1 해버리면 그게 서로 다른거.
+	
+
+	for (int i = 0; i < 10; i++) {
+		cin >> input;
+		Max = Max < input % 42 ? input % 42 : Max;
+		temp[input % 42]++;
+	}
+	for (int i = 0; i <= Max; i++) {
+		if (temp[i] != 0) {
+			result++;
+		}
+	}
+	cout << result;
+	return 0;
+}
