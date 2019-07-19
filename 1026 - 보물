@@ -1,0 +1,45 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+//A가 작은순서대로 B가 큰순서대로 정렬하면 S수열이 최소가 된다.
+
+vector<int> A;
+vector<int> B;
+int temp;
+
+bool cnt(const int &a, const int &b) {
+	if (a > b)
+		return true;
+	else
+		return false;
+}
+
+
+int main(void) {
+	ios::sync_with_stdio(false);
+
+	int N;
+	int sum = 0;
+	cin >> N;
+	for (int i = 0; i < 2; i++) {
+		for (int j = 0; j < N; j++) {
+			cin >> temp;
+			if(i==0)
+				A.push_back(temp);
+			else
+				B.push_back(temp);
+		}
+	}
+	sort(A.begin(), A.end());
+	sort(B.begin(), B.end(),cnt);
+
+	for (int i = 0; i < N; i++) {
+		sum += A[i] * B[i];
+	}
+	cout << sum;
+
+	return 0;
+}
