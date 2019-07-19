@@ -1,0 +1,41 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+
+using namespace std;
+
+int input;
+int k = 0;
+int temp;
+int start;
+
+int foo(string &s) {
+	return (s[0] - '0') + (s[1] - '0');
+}
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin >> input;
+	start = input;
+	while (true)
+	{
+		string s = to_string(input);
+		if (input < 10)
+			s = "0" + s;
+		temp = foo(s);
+		if (temp < 10) {
+			input = ((s[1] - '0') *10) + temp;
+			k++;
+		}
+		else {
+			input = ((s[1] - '0') * 10) + (temp % 10);
+			k++;
+		}
+		if (start == input)
+			break;
+	}
+	cout << k;
+
+	return 0;
+}
