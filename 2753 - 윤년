@@ -1,0 +1,31 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+
+using namespace std;
+
+int input;
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin >> input;
+	if (input % 4 == 0 && input>=4) { //4의배수이면서
+		if (input % 100 == 0 && input >= 100) { //100의 배수
+			if (input % 400 == 0 && input >= 400) { //그런데 400의 배수면 윤년
+				cout << 1;
+			}
+			else {  //그렇지 않으면 평년
+				cout << 0;
+			}
+		}
+		else  //4의 배수이기만하면 윤년
+			cout << 1;
+	}
+	else  //나머진 
+	{
+		cout << 0;
+	}
+
+	return 0;
+}
