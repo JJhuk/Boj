@@ -1,0 +1,27 @@
+#include <iostream>
+#include <string>
+
+
+//벌집의 모양은 육각형이므로, 1 + 6 + 12 + 18 .. 순으로 벌집의 층이 형성되어있다.
+//따라서 벌집의 총 갯수는 n이 층이라고 했을때 Sn = 1 + 시그마6k이다. 즉, 3k(k-1)+1 이다. (n-1고려)
+//그러므로 3(k-2)(k-1)+1<input<=3(k-1)k+1을 만족하는 k를 구하면된다.
+
+using namespace std;
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	int num,temp;
+	int answer;
+	cin >> num;
+	for (int i = 1; true;i++) {
+			temp = 3 * i*(i - 1) + 1;
+			if (temp >= num)
+			{
+				answer = i;
+				break;
+			}
+	}
+	cout << answer;
+	system("pause");
+	return 0;
+}
