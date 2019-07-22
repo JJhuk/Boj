@@ -1,0 +1,47 @@
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+int main() {
+
+	int num;
+	long long result[2000];
+	int cnt = 9;
+	long long temp;
+	long long temp10;
+	queue<long long> input;
+	cin >> num;
+	result[0] = 0;
+	for (int i = 1; i <= 9; i++)
+	{
+		input.push(i);
+		result[i] = i;
+	}
+	if (num > 1022)
+	{
+		printf("-1");
+		return 0;
+	}
+	else if (num >= 10)
+	{
+		while (num >= cnt)
+		{
+			if (input.empty())
+				break;
+			temp10 = input.front();
+			temp = temp10 % 10;
+
+			input.pop();
+			for (int i = 0; i < temp; i++)
+			{
+				input.push(temp10 * 10 + i);
+				result[++cnt] = temp10 * 10 + i;
+			}
+		}
+		cout << result[num];
+	}
+	else
+		printf("%d", result[num]);
+	return 0;
+}
