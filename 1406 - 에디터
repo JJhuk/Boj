@@ -1,0 +1,91 @@
+#include <stack>
+#include <cstring>
+#include <iostream>
+using namespace std;
+
+int main()	
+{
+	ios_base::sync_with_stdio(false);
+	char c[100002] = {""};
+	char resultc[600002] = {""};
+	char control;
+	char input;
+	int arrey = 0;
+	int n, len;
+	stack<char> leftchar;
+	stack<char> rightchar;
+	cin >> c;
+	cin >> n;
+	len = strlen(c);
+	for (int i = 0; i < len; i++)	//커서는 맨 뒤
+	{
+		leftchar.push(c[i]);
+	}
+	for (int i = 0; i < n; i++)
+	{
+		cin >> control;
+		if (control == 'L')	//L 커서를 왼쪽으로 한 칸 옮김
+		{
+			if (leftchar.empty() == true)
+				continue;
+			else
+			{
+				rightchar.push(leftchar.top());
+				leftchar.pop();
+			}
+		}
+		else if (control == 'D') //커서를 오른쪽으로 한 칸 옮김
+		{
+			if (rightchar.empty() == true)
+				continue;
+			else
+			{
+				leftchar.push(rightchar.top());
+				rightchar.pop();
+			}
+		}
+		else if (control == 'B')//커서 왼쪽에 있는 문자를 삭제함
+		{
+			if (leftchar.empty() == true)
+				continue;
+			else
+				leftchar.pop();
+		}
+		else if (control == 'P') // P $ $라는 문자를 커서 왼쪽에 추가함
+		{
+			cin >> input;
+			leftchar.push(input);
+		}
+	}
+	if (leftchar.empty() == true&&rightchar.empty()==false)	//오른쪽 stack만 있을때 
+	{
+		for (int i = 0; !(rightchar.empty()); i++)
+		{
+			resultc[i] = rightchar.top();
+			rightchar.pop();
+		}
+	}
+	else if (rightchar.empty() == false&&leftchar.empty()==false) //둘다 있을때
+	{
+		for (arrey = leftchar.size()-1; !(leftchar.empty()); arrey--) //스택의 특성때문에 왼쪽은 위에서부터 
+		{
+			resultc[arrey] = leftchar.top();
+			leftchar.pop();
+		}
+		for (arrey = strlen(resultc); !(rightchar.empty()); arrey++)
+		{
+			resultc[arrey] = rightchar.top();
+			rightchar.pop();
+		}
+	}
+	else if(leftchar.empty()==false && rightchar.empty()==true)//왼쪽만 있을때
+	{
+		for (int i = leftchar.size()-1; !(leftchar.empty()); i--)
+		{
+			resultc[i] = leftchar.top();
+			leftchar.pop();
+		}
+	}
+	printf("%s", resultc);
+	return 0;
+}
