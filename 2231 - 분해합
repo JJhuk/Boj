@@ -9,22 +9,19 @@ int foo(int n) {
 	for (int i = 0; i < s.length(); i++) {
 		result += s[i] - '0';	//각 자리수를 더해주고
 	}
-	result += n;	//생성자를 더해준다.
-
-	return result;	//분해합 후보
+	return result + n;	//분해합 후보
 }
 
 int main(void) {
 	ios::sync_with_stdio(false);
 	int input;
+
 	int plus = 1;
-	int temp;
 	cin >> input;
 
 	while (true) {
-		temp = foo(plus++);
-		if (temp == input)
-		{
+		int temp = foo(plus++);
+		if (temp == input) {
 			cout << plus-1;	//plus ++ 이기때문에 함수가 끝나면 +1!
 			break;
 		}
@@ -34,7 +31,5 @@ int main(void) {
 		}
 		
 	}
-
-	system("pause");
 	return 0;
 }
