@@ -1,0 +1,67 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+vector<int> v;
+vector<int> result;
+int input_num;
+bool check[101] = { false };
+long long sum = 0;
+
+int gcd(int A, int B) {	//유클리드 호제법	GCD(A,B) = GCD(B,A%B)
+
+	while (B != 0) {
+		int r = A % B;
+		A = B;
+		B = r;
+	}
+	return A;
+}
+
+
+//(A,B) = (B,C) 이므로, 부모가 자식보다 크거나 같아야 한다.
+//dfs 깊이가 2어야함.
+void dfs(int d,int now) {		
+	if (d == 2) {
+		sum+=gcd(result[0], result[1]);
+		return;
+	}
+	else {
+		for (int i = now; i < input_num; i++)
+		{
+			if (!check[i]) {
+				check[i] = true;
+				result.push_back(v[i]);
+				dfs(d+1,i);
+				check[i] = false;
+				result.pop_back();
+			}
+		}
+	}
+}
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	int A, B;
+	int test_case;
+	cin >> test_case;
+	for (int i = 0; i < test_case; i++) {	//테스트 케이스
+		cin >> input_num;
+		for (int j = 0; j < input_num; j++) {	//얼마나 숫자를 넣을것인가
+			int temp;
+			cin >> temp;
+			v.push_back(temp);	//숫자를 벡터에 넣음
+		}
+		sort(v.begin(), v.end());	//소팅
+		memset(check, false, 101);	//false 로 전부 초기화
+		dfs(0,0);	//dfs 돌아보자!
+		cout << sum << "\n";
+		v.clear();
+		result.clear();
+		sum = 0;
+	}
+	return 0;
+}
