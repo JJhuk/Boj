@@ -1,0 +1,27 @@
+#include <iostream>
+
+using namespace std;
+
+int gcd(int A, int B) {	//유클리드 호제법
+	if (B == 0)
+		return A;
+	else
+	{
+		int r = A % B;
+		A = B;
+		B = r;
+		gcd(A, B);
+	}
+}
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	int A, B;
+	cin >> A >> B;
+	int GCD = gcd(A, B);
+	int LCM = (A*B) / GCD;	//LCM = (A*B) / GCD
+
+	cout << GCD << "\n" << LCM;
+
+	return 0;
+}
