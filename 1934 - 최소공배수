@@ -1,0 +1,30 @@
+#include <iostream>
+
+using namespace std;
+
+int gcd(int A, int B) {	//유클리드 호제법	//최대공약수
+	if (B == 0)
+		return A;
+	else
+	{
+		int r = A % B;
+		A = B;
+		B = r;
+		gcd(A, B);
+	}
+}
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	int A, B;
+	int test_case;
+	cin >> test_case;
+	for (int i = 0; i < test_case; i++) {
+		cin >> A >> B;
+		int GCD = gcd(A, B);
+		int LCM = (A*B) / GCD;	//LCM = (A*B)/GCD(a,b)
+		cout << LCM << "\n";
+	}
+
+	return 0;
+}
