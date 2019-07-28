@@ -1,0 +1,37 @@
+#include <vector>
+#include <algorithm>
+#include <iostream>
+
+using namespace std;
+
+int sum = 0;
+int input;
+vector<int> v;
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	for (int i = 0; i < 9; i++) {
+		cin >> input;
+		v.push_back(input);
+		sum += input;	//합을 구한 다음,
+	}
+
+	sort(v.begin(), v.end());	//오름차순 
+
+	for (int i = 0; i < 9; i++) {
+		for (int j = i + 1; j < 9; j++) {
+			if (sum - v[i] - v[j] == 100)	//뺀 2개가 100이되면 된다.
+			{
+				for (int k = 0; k < 9; k++) {
+					if (k != i && k != j)
+						cout << v[k] << "\n";
+				}
+				return 0;	
+			}
+		}
+	}
+
+
+	system("pause");
+	return 0;
+}
