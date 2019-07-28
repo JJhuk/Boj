@@ -1,0 +1,57 @@
+#include <vector>
+#include <algorithm>
+#include <iostream>
+
+using namespace std;
+
+int n, m;
+vector<int> v;
+vector<vector<int>> v_check;
+vector<int> v_temp;
+bool check[8] = { false };
+
+
+//자기가 방문했던 것들을 기록을 남겨 그 기록들이 없으면 출력하게 했다.
+//std::find함수 시간복잡도는O(n)이라서 시간오류가 뜨더라.
+//std::binary_search 즉 이진탐색은 O(logn)이라 시간오류가 안나더라.
+
+void dfs(int d , int now) {
+	if (d == m) {
+		if (!binary_search(v_check.begin(),v_check.end(),v)){	//찾으면 true를 반환함
+			for (int i = 0; i < v.size(); i++) {
+				cout << v[i] << " ";
+			}
+			cout << "\n";
+			v_check.push_back(v);	//없었던 것들이니 기록
+		}
+	}
+	else {
+		//todo
+		for (int i = now; i < n; i++) {
+			//if (!check[i]) {	//중복제거
+				//check[i] = true;
+				v.push_back(v_temp[i]);
+				dfs(d + 1,i);	//본인부터 시작!
+				v.pop_back();
+				//check[i] = false;
+			//}
+		}
+	}
+}
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin >> n >> m;
+	for (int i = 0; i < n; i++) {
+		int temp;
+		cin >> temp;
+		v_temp.push_back(temp);
+	}
+	sort(v_temp.begin(), v_temp.end());
+
+	dfs(0,0);
+
+	system("pause");
+
+	return 0;
+}
