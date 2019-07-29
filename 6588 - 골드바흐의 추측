@@ -1,0 +1,43 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+#define MAX_INPUT 10000000
+
+bool check[MAX_INPUT+1];
+vector<int> v;
+
+//골드바흐의 추측
+//미리 소수를 다 구해서 집어넣는다.
+void Eratos() {
+	for (long long i = 2; i <= MAX_INPUT; i++) {
+		if (check[i] == false) {
+			v.push_back(i);
+			for (long long j = i * i; j <= MAX_INPUT; j += i) {
+				check[j] = true;
+			}
+		}
+	}
+}
+
+//1000*1000은 1000000이니.. 에라토레스의 체를 1000까지 돌리면 될 것같다.
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	long long input;
+	Eratos();
+	cin >> input;
+	while (input != 0) {
+		for (int i = 0; v[i] < input; i++) {
+			int temp = input - v[i];	//p + q = N이라고 생각하면 N - p = q이다. p가 소수인지 확실하면 q를 구한다음에 이게 구한 소수중에 있는지 탐색
+			if (binary_search(v.begin(), v.end(), temp)) {	//걸리면 소수가 있는것이다. logN
+				cout << input << " = " << v[i] << " + " << temp << "\n";
+				break;
+			}
+		}
+		cin >> input;
+	}
+	return 0;
+}
