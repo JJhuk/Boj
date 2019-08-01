@@ -1,0 +1,61 @@
+#include <algorithm>
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int city[10][10] = { 0 };
+int min_diter = 2147483647;
+vector<int> v;
+
+
+//index를 순열로 표현하면 input 4일때 0 1 2 3 이다.
+//그럼 0->1->2->3->0 이렇게인데
+//그냥 순열 계속 해버리면 모든구간 다 탐색이 가능하다.
+//그러나 도시 이동할때 0일경우 이동을 못하니, 바로 break
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	int input;
+	cin >> input;
+
+	for (int i = 0; i < input; i++) {
+		for (int j = 0; j < input; j++) {
+			cin >> city[i][j];
+		}
+		v.push_back(i);
+	}
+
+	int size = v.size();
+	do {
+		int sum = 0;
+		bool isFail = false;	//도시 이동불가일때
+		for (int i = 0; i < size-1; i++) {
+			if (city[v[i]][v[i + 1]] == 0) {	//0이되면 가지 못하는거임
+				isFail = true;
+				sum = 0;
+				break;
+			}
+			else {	//이동성공
+				sum += city[v[i]][v[i + 1]];
+			}
+		}
+		if (city[v[size - 1]][v[0]] == 0)	//마지막도시에서 원래 돌아오는게 0이면 걍 끝임
+		{
+			isFail = true;
+			sum = 0;
+		}
+		else {	//마지막까지 이동성공
+			sum += city[v[size - 1]][v[0]];
+		}
+		if (!isFail) {
+			min_diter = sum > min_diter ? min_diter : sum;
+		}
+
+	} while (next_permutation(v.begin(), v.end()));
+
+	cout << min_diter;
+
+	system("pause");
+	return 0;
+}
