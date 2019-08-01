@@ -1,0 +1,63 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+#define SELECT_NUM 6
+
+using namespace std;
+
+//n개중에 6개를 고름
+
+
+int main(void) {
+	int n;
+	int input;
+	while (true) {
+		cin >> n;
+		if (n == 0)	//종료 조건	
+			break;
+		vector<int> v;	
+		for (int i = 0; i < n; i++) {
+			cin >> input;
+			v.push_back(input);
+		}
+		vector<int> d;	//n-선택하는 수 0 대입
+		for (int i = 0; i < n - SELECT_NUM; i++) {
+			d.push_back(0);
+		}
+
+		//선택하는수만큼 1 대입
+		for (int i = 0; i < SELECT_NUM; i++) {
+			d.push_back(1);
+		}
+
+		//이러면 예시가
+		//1 2 3 4 5 6 7
+		//0 1 1 1 1 1 1
+		//이렇게 되니 2 3 4 5 6 7만 넣겠다는 뜻이다.
+		//이상태에서 0과 1을 순열시켜주면 여러가지 수 중에서 중복x 수를 선택하는 것.
+
+		vector<vector<int>> ans;	//답을 저장할 벡터
+		
+		do {
+			vector<int> currents;
+			for (int i = 0; i < n; i++) {
+				if (d[i] == 1)	//뽑힌 수라면
+					currents.push_back(v[i]);	//그 인덱스의 수를 집어넣는다
+			}
+			ans.push_back(currents);	//로또 번호의 후보들
+		} while (next_permutation(d.begin(),d.end()));	//다시 0과 1을 순열시켜줌
+		sort(ans.begin(), ans.end());	//답은 오름차순
+
+		for (int i = 0; i < ans.size(); i++) {
+			for (int j = 0; j < ans[i].size(); j++) {
+				cout << ans[i][j] << " ";
+			}
+			cout << "\n";
+		}
+		cout << "\n";
+	}
+
+
+	return 0;
+}
