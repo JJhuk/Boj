@@ -1,0 +1,72 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+#define PLUS 1
+#define MINUS 2
+#define MUL 3
+#define DIV 4
+
+#define INT_MIN     (-2147483647 - 1) // minimum (signed) int value
+#define INT_MAX       2147483647    // maximum (signed) int valu
+
+int input, temp;
+int min_result = INT_MAX;
+int max_result = INT_MIN;
+int oper[4] = { 0 };	//플 마 곱 나
+int oper_sum = 0;
+vector<int> v;
+vector<int> op;
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cin >> input;
+	for (int i = 0; i < input; i++) {
+		cin >> temp;
+		v.push_back(temp);
+	}
+	cin >> oper[0] >> oper[1] >> oper[2] >> oper[3];
+	oper_sum = oper[0] + oper[1] + oper[2] + oper[3];
+
+		for (int j = 0; j < oper[0]; j++)
+			op.push_back(PLUS);
+		for (int j1 = 0; j1 < oper[1]; j1++)
+			op.push_back(MINUS);
+		for (int j2 = 0; j2 < oper[2]; j2++)
+			op.push_back(MUL);
+		for (int j3 = 0; j3 < oper[3]; j3++)
+			op.push_back(DIV);
+	do {
+		int result = 0;
+		int temp = v[0];
+		//앞뒤 temp;
+		for (int i = 0; i < oper_sum; i++) {	//연산자 갯수
+			switch (op[i]) {
+			case PLUS :
+				temp = temp + v[i + 1];
+				break;
+			case MINUS:
+				temp = temp - v[i + 1];
+				break;
+			case MUL :
+				temp = temp * v[i + 1];
+				break;
+			case DIV:
+				temp = temp / v[i + 1];
+				break;
+			}
+		}
+		max_result = max_result < temp ? temp : max_result;
+		min_result = min_result < temp ? min_result : temp;
+
+	} while (next_permutation(op.begin(), op.end()));
+
+	cout << max_result << "\n" << min_result;
+
+
+	system("pause");
+	return 0;
+}
