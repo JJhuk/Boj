@@ -1,0 +1,33 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int test_case;
+int n;
+
+int foo(int sum,int ans) {
+	if (ans == n)
+		return 1;
+	else if (ans > n)
+		return 0;
+	else {
+		return foo(sum , ans+1) + foo(sum , ans+2) + foo(sum , ans+3);
+	}
+}
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cin >> test_case;
+
+	for (int i = 0; i < test_case; i++) {
+		int ans = 0;
+		cin >> n;
+		
+		cout << foo(n, ans) << "\n";
+	}
+
+	return 0;
+}
