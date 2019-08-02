@@ -1,0 +1,59 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+
+using namespace std;
+
+
+int l, c;
+
+vector<char> temp;
+
+bool check(string password) {
+	int ja = 0;
+	int mo = 0;
+	for (int i = 0; i < password.length(); i++) {
+		if (password[i] == 'a' || password[i] == 'e' || password[i] == 'i' || password[i] == 'o' || password[i] == 'u') {
+			mo++;
+		}
+		else
+			ja++;
+	}
+	return (mo >= 1 && ja >= 2);
+}
+
+//선택할지말지 인덱스,현재 패스워드,목표 길이
+void foo(int index, string password, int l) {
+	if (password.length()==l) {	//순서가 중요. 맨마지막꺼 들어갔을때 안나옴
+		if (check(password)) {
+			cout << password << "\n";
+		}
+		return;
+	}
+	else if (temp.size() < index + 1) {	//위에꺼 채크하고 안되는거 체크
+		return;
+	}
+	else {
+		foo(index + 1, password + temp[index], l);
+		foo(index + 1, password, l);
+	}
+}
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cin >> l >> c;
+
+	for (int i = 0; i < c; i++) {
+		char input;
+		cin >> input;
+		temp.push_back(input);
+	}
+
+	sort(temp.begin(), temp.end());
+	foo(0, "", l);
+
+
+	return 0;
+}
