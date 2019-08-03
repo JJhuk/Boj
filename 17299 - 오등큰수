@@ -1,0 +1,48 @@
+#include <iostream>
+#include <vector>
+#include <stack>
+
+using namespace std;
+
+int test_case;
+
+int temp;
+
+vector<int> v;
+vector<int> ans;
+stack<int> s;
+
+int count_num[1000001] = { 0 };
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	cin >> test_case;
+	for (int i = 0; i < test_case; i++) {
+		cin >> temp;
+		v.push_back(temp);
+		count_num[temp]++;
+	}
+
+	s.push(-1);
+
+	for (int i = v.size() - 1; i >= 0; i--) {
+		if (count_num[s.top()] <= count_num[v[i]]) {	//스택의 맨 위가 백터보다 더 크면
+			while (count_num[s.top()] <= count_num[v[i]] && s.top() != -1)
+				s.pop();
+			ans.push_back(s.top());
+			s.push(v[i]);
+		}
+		else {
+			ans.push_back(s.top());
+			s.push(v[i]);
+		}
+	}
+
+	for (int i = ans.size() - 1; i >= 0; i--) {
+		cout << ans[i] << " ";
+	}
+
+	return 0;
+}
