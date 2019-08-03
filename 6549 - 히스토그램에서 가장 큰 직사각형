@@ -1,0 +1,65 @@
+#include <vector>
+#include <iostream>
+#include <stack>
+
+using namespace std;
+
+typedef struct his {
+	long long val;
+	int idx;
+};
+
+
+int test_case;
+
+void foo(int test_case) {
+	
+	vector<long long> stick;
+	vector<int> left_val;
+	vector<int> right_val;
+	stack<his> s;
+	long long input;
+
+	long long max_his = 0;
+
+	for (int i = 0; i < test_case; i++) {
+		cin >> input;
+		stick.push_back(input);
+	}
+	for (int i = 0; i < test_case; i++) {
+		while (!s.empty() && s.top().val >= stick[i])	//오름차순으로 정렬
+			s.pop();	//stick[i]보다 큰수는 없음
+		left_val.push_back(s.empty() ? -1 : s.top().idx);	//비어있다면 잴 작은거니 -1 아니면 자기보다 작은수 중에 가장큰수의 idx 반환
+		s.push({ stick[i],i });	// 갱신
+	}
+	while (!s.empty())
+		s.pop();
+	for (int i = test_case - 1; i >= 0; i--) {
+		while (!s.empty() && s.top().val >= stick[i])	//오름차순으로 정렬
+			s.pop();
+		right_val.push_back(s.empty() ? test_case : s.top().idx);	//비어있다면 오른쪽까지 뻗을수있음. 아니면 인덱스 추가
+		s.push({ stick[i],i });
+	}
+	while (!s.empty())
+		s.pop();
+	for (int i = 0; i < test_case; i++) {
+		long long temp = stick[i] * (right_val[test_case-i-1] - left_val[i] -1);	
+		max_his = max_his > temp ? max_his : temp;
+	}
+	cout << max_his << "\n";
+	
+}
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cin >> test_case;
+	while (true) {
+		if (test_case == 0)
+			break;
+		foo(test_case);
+		cin >> test_case;
+	}
+	system("pause"); 
+	return 0;
+}
