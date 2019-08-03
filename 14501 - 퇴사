@@ -1,0 +1,44 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+typedef struct schedule {	//상담 내용
+	int day;
+	int pay;
+}_schedule;
+
+vector<schedule> v;
+
+int max_money = 0;
+int test_case;
+
+void go(int day, int sum) {
+	if (day == test_case+1)	//딱 퇴사일 일때
+	{
+		max_money = max_money < sum ? sum : max_money;
+		return;
+	}
+	else if (day > test_case + 1) {	//퇴사일을 넘어갈때
+		return;
+	}
+	go(day + v[day-1].day, sum + v[day-1].pay);	//상담을 수락할때
+	go(day + 1, sum);	//그냥 넘어갈때
+}
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	int input_day, input_money;
+	cin >> test_case;
+
+	for (int i = 0; i < test_case; i++) {
+		cin >> input_day >> input_money;
+		v.push_back({ input_day,input_money });
+	}
+	go(1, 0);	//1일 0원
+
+	cout << max_money;
+  
+	return 0;
+}
