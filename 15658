@@ -1,0 +1,50 @@
+#include <iostream>
+#include <vector>
+
+#define LLONG_MAX     10e10+1       
+#define LLONG_MIN   -10e10-1  
+
+using namespace std;
+
+int n;
+
+long long sum_max = LLONG_MIN;
+long long sum_min = LLONG_MAX;
+
+
+//sum 은 v[0]대입.
+void foo(const vector<int> &v,const vector<int> &op,long long sum, int idx,int plus,int minus,int mul,int div) {
+	if (idx > n - 1 || plus > op[0] || minus > op[1] || mul > op[2] || div > op[3])
+		return;
+	if (idx == n - 1) {
+		sum_max = sum_max < sum ? sum : sum_max;
+		sum_min = sum_min > sum ? sum : sum_min;
+		return;
+	}
+	foo(v, op, sum + v[idx + 1], idx + 1, plus + 1, minus, mul, div);
+	foo(v, op, sum - v[idx + 1], idx + 1, plus , minus + 1, mul, div);
+	foo(v, op, sum * v[idx + 1], idx + 1, plus, minus, mul + 1, div);
+	foo(v, op, sum / v[idx + 1], idx + 1, plus , minus, mul, div + 1);
+
+}
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cin >> n;
+	vector<int> v(n);
+	vector<int> op(4);
+	
+	for (int i = 0; i < n; i++) {
+		cin >> v[i];
+	}
+	for (int i = 0; i < 4; i++) {
+		cin >> op[i];
+	}
+	foo(v, op, v[0], 0, 0, 0, 0, 0);
+	cout << sum_max << "\n" << sum_min;
+	
+
+	system("pause");
+	return 0;
+}
