@@ -1,0 +1,38 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int n, s;
+
+int sum_count = 0;
+
+void foo(vector<int> &v, int sum,int idx) {
+	if (sum == s && idx ==n) {	//그냥 합만보거나 인덱스를 보는것이 아닌 둘다봐야함 ex)3 0 -2 2 0 정답 :3임
+		sum_count++;
+		return;
+	}
+	if (sum!=s&&idx>=n)
+		return;
+	foo(v, sum + v[idx], idx +1);
+	foo(v, sum, idx + 1);
+}
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cin >> n >> s;
+	vector<int> v(n);
+
+	for (int i = 0; i < n; i++) {
+		cin >> v[i];
+	}
+	foo(v, 0, 0);
+	if(s==0)	//길이가 양수이여야함. 근데 원소 전부 선택안하면 idx와 sum이 0이지만 길이는 0이되서 공집합 처리해야함
+		cout << sum_count-1;
+	else
+		cout << sum_count;
+
+	system("pause");
+	return 0;
+}
