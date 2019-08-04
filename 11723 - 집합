@@ -1,0 +1,61 @@
+#include <iostream>
+#include <string>
+
+
+//기본 틀은 1<<input이다.
+//1을 집합에 넣을려면
+//S가 0000 0000 이라고 가정하고, (빈 집합)
+//0000 0010이다. (첫번쨰 자리가 1)
+//0000 0000
+//0000 0010 을 or연산 해주면 된다.
+//2를 집합에 넣을려면
+//0000 0010 //현재집합
+//0000 0100 //2
+//0000 0110 //1과 2가 들어가있는 집합
+//그래서 add는 s = s|(1<<input)이다.
+//|나 & ~ ^연산자를 이용해 해결함.
+using namespace std;
+
+int test_case;
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cin >> test_case;
+	int S = 0;
+	for (int i = 0; i < test_case; i++) {
+		string fun;
+		int input;
+		cin >> fun;
+		if (fun == "add") {
+			cin >> input;
+			S = S | (1<<input);	//or 연산이니 0인걸 1로 추가해서 해당되는 수를 추가
+		}
+		else if (fun == "remove") {
+			cin >> input;
+			S = S & ~(1<<input);	//그수 제외하고는 전부 1이니 그수만 and
+		}
+		else if (fun == "check") {
+			cin >> input;
+			if (S & (1<<input))	//그게 있으면 1return이니..
+				cout << "1\n";
+			else
+				cout << "0\n";
+		}
+		else if (fun == "toggle") {
+			cin >> input;
+			S = S ^ (1 << input);	//있으면 제거 / 없으면 추가
+		}
+		else if (fun == "all") {
+			S = 0;
+			for (int j = 1; j <= 20; j++) {
+				S = S | (1 << j);
+			}
+		}
+		else if (fun == "empty") {
+			S = 0;
+		}
+	}
+
+	return 0;
+}
