@@ -1,0 +1,38 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int n, m;
+
+vector<int> v;
+
+int sum_max = 0;
+
+void foo(int sum, int idx,int count) {
+	if (sum <= m && idx <= n && count == 3) {	//3개를 선택하고, n보다 작거나 같고, idx는 n보다 작거나 같아야함. (마지막 골랐을때)
+		sum_max = sum_max > sum ? sum_max : sum;
+		return;
+	}
+	if (sum > m || idx >= n || count > 3) {	//idx가 조건이 같은 이유는 마지막 골랐을때가 조건이 안되면 바로 리턴을 해줘야 됨.
+		return;
+	}
+	foo(sum + v[idx], idx + 1,count +1);	//카드를 골랐을 때
+	foo(sum , idx + 1,count);	//그냥 안골랐을때
+}
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cin >> n >> m;
+	v.assign(n,0);
+
+	for (int i = 0; i < n; i++) {
+		cin >> v[i];
+	}
+	foo(0, 0,0);
+	cout << sum_max;
+
+	system("pause");
+	return 0;
+}
