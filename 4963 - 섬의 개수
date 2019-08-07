@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+#include <utility>
+#include <cstring>
+
+using namespace std;
+
+int width, height;
+
+int arr[52][52];
+int check[52][52];
+
+int dx[8] = { 1,-1,0,0,1,1,-1,-1 };
+int dy[8] = { 0,0,-1,1,-1,1,1,-1 };
+
+
+
+void dfs(int x, int y, int cnt) {
+	check[x][y] = cnt;
+	for (int i = 0; i < 8; i++) {
+		int nx = x + dx[i];
+		int ny = y + dy[i];
+		if (nx >= 0 && nx < height&&ny >= 0 && ny < width) {
+			if (arr[nx][ny] == 1 && check[nx][ny] == 0)
+			{
+				check[nx][ny] = cnt;
+				dfs(nx, ny, cnt);
+			}
+		}
+	}
+}
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+
+	while (true) {
+		int sum_count = 0;
+		cin >> width >> height;
+		if (width == 0 && height == 0) {	//종료조건
+			break;
+		}
+		memset(arr, 0, sizeof(arr));
+		memset(check, 0, sizeof(arr));
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				cin >> arr[i][j];
+			}
+		}
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				if (arr[i][j]==1 && check[i][j] == 0) 
+					dfs(i, j, ++sum_count);
+			}
+		}
+		cout << sum_count << "\n";
+	}
+
+	system("pause");
+	return 0;
+}
