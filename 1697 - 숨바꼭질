@@ -1,0 +1,44 @@
+#include <queue>
+#include <utility>
+#include <iostream>
+
+using namespace std;
+#define MAX 200000
+
+int n, k;
+
+queue<pair<int, int>> q;
+pair<int, int> now;
+bool check[MAX+1];
+
+
+int main(void) {
+	cin.tie(0);
+	ios::sync_with_stdio(false);
+	cin >> n >> k;
+	q.push(make_pair(n,0));
+	check[n] = true;
+	while (!q.empty()) {
+		now = q.front();
+		q.pop();
+		if (now.first == k){
+			cout << now.second;
+			break;
+		}
+		if (now.first - 1 >= 0&&!check[now.first-1]  ) {
+			q.push(make_pair(now.first - 1, now.second + 1));
+			check[now.first - 1] = true;
+		}
+		if (now.first + 1 <= MAX && !check[now.first + 1])  {
+			q.push(make_pair(now.first + 1, now.second + 1));
+			check[now.first + 1] = true;
+		}
+		if (2 * now.first <= MAX && !check[2*now.first]) {
+			q.push(make_pair(2*now.first , now.second + 1));
+			check[2 * now.first] = true;
+		}
+	}
+
+	system("pause");
+	return 0;
+}
