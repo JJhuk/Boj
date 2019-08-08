@@ -1,0 +1,48 @@
+#include <iostream>
+#include <queue>
+#include <utility>
+#include <cstring>
+
+using namespace std;
+
+	//화면 클립보드
+int check[1001][1001];
+
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	int s;
+	cin >> s;
+	queue<pair<int, int>> q;
+	memset(check, -1, sizeof(check));
+	q.push(make_pair(1,0));
+	check[1][0] = 0;
+	while (!q.empty()) {
+		int x = q.front().first;
+		int y = q.front().second;
+		q.pop();
+		if (x == s)
+		{
+			cout << check[x][y];
+			break;
+		}
+		//이모티콘 복사해서 클립보드 저장
+		if (check[x][x] == -1) {		
+			q.push(make_pair(x, x));
+			check[x][x] = check[x][y] + 1;
+		}
+		//클립보드에 있는 모든 이모티콘 붙여넣기
+		if (x + y <= s &&check[x + y][y] == -1 ) {
+			q.push(make_pair(x+y, y));
+			check[x+y][y] = check[x][y] + 1;
+		}
+		//이모티콘 하나 삭제.
+		if (x - 1 >= 0&&check[x - 1][y] == -1  ) {
+			q.push(make_pair(x - 1, y));
+			check[x - 1][y] = check[x][y] + 1;
+		}
+		
+	}
+	return 0;
+}
