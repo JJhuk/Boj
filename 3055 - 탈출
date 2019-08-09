@@ -1,0 +1,94 @@
+#include <queue>
+#include <cstdio>
+#include <cstring>
+#include <tuple>
+
+using namespace std;
+
+#define MAX 50
+
+char map[MAX + 10][MAX + 10] = { '\n' };
+int check_water[MAX + 10][MAX + 10];
+int check[MAX + 10][MAX + 10];
+int r, c;
+
+int dx[] = { 1,-1,0,0 };
+int dy[] = { 0,0,-1,1 };
+
+queue<pair<int,int>> water;
+queue<pair<int, int>> start;
+
+
+//D 도착점 S고슴도치
+int main(void) {
+	scanf("%d %d", &r, &c);	//세로 //가로
+	memset(check_water, -1, sizeof(check_water));
+	memset(check, -1, sizeof(check));
+	pair<int, int> end;
+	bool startOK = true;
+	pair<int, int> begin;
+
+	for (int i = 0; i < r ; i++) {
+		scanf("%s", map[i]);
+	}
+	for (int i = 0; i < r; i++) {
+		for (int j = 0; j < c; j++) {
+			if (map[i][j] == '*') {	//물
+				water.push(make_pair(i, j));
+				check_water[i][j] = 0;
+			}
+			if (map[i][j] == 'S') {	//start
+				start.push(make_pair(i, j));
+				begin = make_pair(i, j);
+				check[i][j] = 0;
+			}
+			if (map[i][j] == 'D') {
+				end = make_pair(i, j);
+			}
+		}
+	}
+
+	while (!water.empty()) {	//물이 이동하는거 먼저구함
+		int x, y;
+		tie(x, y) = water.front();
+		water.pop();
+		for (int i = 0; i < 4; i++) {
+			int nx = x + dx[i];
+			int ny = y + dy[i];
+			if (nx >= 0 && nx < r && ny >= 0 && ny < c) {
+				if (map[nx][ny] != 'X'&& map[nx][ny] != 'D'&&check_water[nx][ny] == -1) {
+					check_water[nx][ny] = check_water[x][y] + 1;
+					water.push(make_pair(nx, ny));
+				}
+			}
+		}
+	}
+
+	while (!start.empty()) {
+		int x, y;
+		tie(x, y) = start.front();
+		start.pop();
+		for (int i = 0; i < 4; i++) {
+			int nx = x + dx[i];
+			int ny = y + dy[i];
+			if (nx >= 0 && nx < r && ny >= 0 && ny < c) {
+				if (check[nx][ny] != -1) 
+					continue;
+				if (map[nx][ny] == 'X') 
+					continue;
+				if (check_water[nx][ny] != -1 && check[x][y] + 1 >= check_water[nx][ny]) 
+					continue;
+				check[nx][ny] = check[x][y] + 1;
+				start.push(make_pair(nx, ny));
+			}
+		}
+	}
+	if (check[end.first][end.second] != -1 ) {
+		printf("%d", check[end.first][end.second]);
+	}
+	else {
+		printf("KAKTUS");
+	}
+
+	return 0;
+}
