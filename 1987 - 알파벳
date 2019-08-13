@@ -1,0 +1,52 @@
+#include <iostream>
+#include <stack> 
+#include <tuple>
+#include <cstring>
+
+using namespace std;
+
+#define MAX 22
+
+int sero, garo;
+char map[MAX][MAX];
+bool check_alpa[26];
+
+int go_max_go = 0;
+
+int dx[] = { 1,-1,0,0 };
+int dy[] = { 0,0,1,-1 };
+
+int max_go = 1;
+
+stack<pair<int, int>> q;
+
+void dfs(int x, int y,int cnt) {
+
+	max_go = max_go < cnt ? cnt : max_go;
+	for (int i = 0; i < 4; i++) {
+		int nx = x + dx[i];
+		int ny = y + dy[i];
+		if (nx >= 0 && nx < sero && ny >= 0 && ny < garo && !check_alpa[map[nx][ny] - 'A']) {
+			check_alpa[map[nx][ny] - 'A'] = true;
+			dfs(nx, ny,cnt+1);
+			check_alpa[map[nx][ny] - 'A'] = false;
+		}
+	}
+	
+}
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cin >> sero >> garo;
+
+	for (int i = 0; i < sero; i++) {
+		cin >> map[i];
+	}
+	
+	check_alpa[map[0][0] - 'A'] = true;
+	dfs(0, 0, 1);
+	cout << max_go ;
+
+	return 0;
+}
