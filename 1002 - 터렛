@@ -1,0 +1,71 @@
+#include <iostream>
+#include <vector>
+#include <tuple>
+#include <cmath>
+
+#define X 0
+#define Y 1
+#define R 2
+
+using namespace std;
+
+tuple<int, int,int> Jo_Pos;	//x y r
+tuple<int, int,int> Baek_Pos;
+pair<int, int> start_for_r;
+
+vector<pair<int, int>> cross_xy;	//두 원의 교점의 좌표
+
+int x, y, z;
+
+
+int min_r; //원의 크기가 더 큰것
+int min_x;	//더 왼쪽에 있는 것
+int max_x;
+
+int test_case;
+int temp_input;
+
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+
+	cin >> test_case;
+
+	for (int i = 0; i < test_case; i++) {
+		cin >> x >> y >> z;
+		Jo_Pos = make_tuple(x, y, z);
+		cin >> x >> y >> z;
+		Baek_Pos = make_tuple(x, y, z);
+
+		int max_r = get<R>(Jo_Pos) < get<R>(Baek_Pos) ? get<R>(Baek_Pos) : get<R>(Jo_Pos);
+		int min_r = get<R>(Jo_Pos) > get<R>(Baek_Pos) ? get<R>(Baek_Pos) : get<R>(Jo_Pos);
+		
+		int plus_r = pow(max_r + min_r,2);
+		int minus_r =pow(max_r - min_r,2);
+
+		if (Jo_Pos == Baek_Pos)
+			cout << -1 << "\n";
+		else {
+			int d = pow(get<X>(Jo_Pos) - get<X>(Baek_Pos), 2) + pow(get<Y>(Jo_Pos) - get<Y>(Baek_Pos), 2);
+			if (minus_r<d&&plus_r>d) {	//교차할때
+				cout << 2 << "\n";
+			}
+			else if (plus_r == d) {	//외접할때
+				cout << 1 << "\n";
+			}
+			else if (d == minus_r && d != 0) {	//내접할떄
+				cout << 1 << "\n";
+			}
+			else if (d < minus_r) {	//내접하지않고 안에있을떄
+				cout << 0 << "\n";
+			}
+			else if (d > plus_r) {	//떨어져있을때
+				cout << 0 << "\n";
+			}
+		}
+	}
+	
+	system("pause");
+	return 0;
+}
