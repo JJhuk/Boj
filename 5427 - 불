@@ -1,0 +1,108 @@
+#include <cstdio>
+#include <cstring>
+#include <tuple>
+#include <queue>
+#include <algorithm>
+#include <iostream>
+
+#define MAP_MAX 2000
+
+using namespace std;
+
+int test_case;
+int height, width;
+
+int dx[] = { 1,-1,0,0 };
+int dy[] = { 0,0,-1,1 };
+
+char map[MAP_MAX][MAP_MAX];
+int fire_dist[MAP_MAX][MAP_MAX];
+int map_dist[MAP_MAX][MAP_MAX];
+
+
+int main(void) {
+	scanf("%d", &test_case);
+	while (test_case--) {
+
+		bool isArrive = false;
+		int answer;
+		queue<pair<int, int>> charator;	//상근이의 좌표
+		queue<pair<int, int>> fire;	//불의 좌표
+		vector<pair<int, int>> arrive;	//도착지의 좌표
+
+		scanf("%d %d", &width, &height);
+		memset(fire_dist, -1, sizeof(fire_dist));
+		memset(map_dist, -1, sizeof(map_dist));
+		memset(map, '\0', sizeof(map));
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				scanf(" %1c", &map[i][j]);
+				if (map[i][j] == '.') {	//빈 공간이면서
+					if (i == 0 || j == width - 1 || i == height - 1 || j == 0) {	//테두리일때
+						arrive.push_back(make_pair(i, j));	//도착지의 좌표를 넣어줌
+					}
+				}
+				if (map[i][j] == '@') {	//상근이
+					if (i == 0 || j == width - 1 || i == height - 1 || j == 0)	//상근이 자체가 테두리에 있을때
+						arrive.push_back(make_pair(i, j));
+;					charator.push(make_pair(i, j));
+					map_dist[i][j] = 0;
+				}
+				if (map[i][j] == '*') {	//불
+					fire.push(make_pair(i, j));
+					fire_dist[i][j] = 0;
+				}
+			}
+		}
+
+		while (!fire.empty()) {
+			int x, y;
+			tie(x, y) = fire.front();
+			fire.pop();
+			for (int i = 0; i < 4; i++) {
+				int nx = x + dx[i];
+				int ny = y + dy[i];
+				if (nx >= 0 && nx < height&&ny >= 0 && ny < width) {
+					if (map[nx][ny] == '#')
+						continue;
+					if (fire_dist[nx][ny] == -1) {
+						fire_dist[nx][ny] = fire_dist[x][y] + 1;
+						fire.push(make_pair(nx, ny));
+					}
+				}
+			}
+		}
+
+		while (!charator.empty()) {
+			pair<int,int> point;
+			point = charator.front();
+			charator.pop();
+			if (binary_search(arrive.begin(), arrive.end(), point)) {	//도착한 곳이 찾은곳이면?
+				answer = map_dist[point.first][point.second];
+				isArrive = true;
+				break;
+			}
+			for (int i = 0; i < 4; i++) {
+				int nx = point.first + dx[i];
+				int ny = point.second + dy[i];
+				if (nx >= 0 && nx < height&&ny >= 0 && ny < width) {
+					if (map[nx][ny] == '#')
+						continue;
+					if (map_dist[nx][ny] == -1) {	
+						if(fire_dist[nx][ny] != -1)	//fire_dist가 -1때 생각해줘야함. (불이 번지지 않는 곳)
+							if (fire_dist[nx][ny] <= map_dist[point.first][point.second] + 1)
+								continue;
+						map_dist[nx][ny] = map_dist[point.first][point.second] + 1;
+						charator.push(make_pair(nx, ny));
+					}
+				}
+			}
+		}
+		if (isArrive)
+			printf("%d\n", answer+1);
+		else
+			printf("IMPOSSIBLE\n");
+	}
+
+	return 0;
+}
