@@ -1,0 +1,73 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <tuple>
+#include <queue>
+#include <cstring>
+
+using namespace std;
+
+int test_case;
+
+bool check[10000];
+
+int start_num, end_num;
+//0100을 100으로하면안됨..
+
+string bfs() {
+	queue<pair<int, string>> q;
+	q.push(make_pair(start_num, ""));
+	check[start_num] = true;
+
+	while (!q.empty()) {
+		int curnum,temp_num;
+		string curstr;
+		tie(curnum, curstr) = q.front();
+		q.pop();
+
+		if (curnum == end_num) {
+			return curstr;
+		}
+
+		//D
+		temp_num = (2 * curnum) % 10000;
+		if (!check[temp_num]) {
+			check[temp_num] = true;
+			q.push(make_pair(temp_num, curstr + "D"));
+		}
+		//S
+		temp_num = (curnum - 1) < 0 ? 9999 : curnum - 1;
+		if (!check[temp_num]) {
+			check[temp_num] = true;
+			q.push(make_pair(temp_num, curstr + "S"));
+		}
+		//L
+			temp_num = (curnum % 1000) * 10 + (curnum / 1000);
+			if (!check[temp_num]) {
+				check[temp_num] = true;
+				q.push(make_pair(temp_num, curstr + "L"));
+			}
+
+		//R
+			temp_num = (curnum / 10)  + (curnum % 10)*1000;
+			if (!check[temp_num]) {
+				check[temp_num] = true;
+				q.push(make_pair(temp_num, curstr + "R"));
+			}
+
+	}
+
+}
+
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cin >> test_case;
+	while (test_case--) {
+		cin >> start_num >> end_num;
+		memset(check, false, sizeof(check));
+		cout <<bfs()<<"\n";
+	}
+	return 0;
+}
