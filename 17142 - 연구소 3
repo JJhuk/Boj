@@ -1,0 +1,133 @@
+#include <iostream>
+#include <tuple>
+#include <queue>
+#include <cstring>
+#include <vector>
+
+#define MAP_SIZE 60
+#define EMPTY 0
+#define WALL 1
+#define DIST_WALL -1
+#define VIRUS 2
+
+//0 빈칸 1벽 2바이러스
+
+using namespace std;
+
+int map[MAP_SIZE][MAP_SIZE];
+int dist[MAP_SIZE][MAP_SIZE];
+int temp_dist[MAP_SIZE][MAP_SIZE];
+
+vector<pair<int, int>> temp_v;
+
+vector<pair<int, int>> virus_temp;
+
+int n, many_virus;
+
+int count_dist = 10000000;
+
+int dx[] = { 1,-1,0,0 };
+int dy[] = { 0,0,1,-1 };
+
+bool find_dist = false;
+
+vector<pair<int, int>> virus_pos;
+
+int check_map() {
+	int max_count = 0;
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			if (temp_dist[i][j] == -2) {	//빈공간이 있을 경우엔 return
+				return -1;
+				break;
+			}
+			if (map[i][j] == 2) {	//바이러스일때	(비활성->활성)일때 체크
+				continue;
+			}
+			max_count = max_count < temp_dist[i][j] ? temp_dist[i][j] : max_count;
+		}
+	}
+	return max_count;
+}
+
+void bfs() {	//dist 1 이면 벽
+	queue<pair<int, int>> q;
+	for (int i = 0; i < many_virus; i++) {
+		q.push(virus_pos[i]);
+	}
+	while (!q.empty()) {
+		int x, y;
+		tie(x, y) = q.front();
+		q.pop();
+		for (int i = 0; i < 4; i++) {
+			int nx = x + dx[i];
+			int ny = y + dy[i];
+			if (nx >= 0 && nx < n && ny >= 0 && ny < n) {
+				if (temp_dist[nx][ny] == DIST_WALL)	//벽일때
+					continue;
+				if (temp_dist[nx][ny] == -3) {	//비활성 바이러스일때
+					temp_dist[nx][ny] = temp_dist[x][y] + 1;
+					q.push(make_pair(nx, ny));
+				}
+				if (temp_dist[nx][ny]== -2) {	//빈공간 일때만
+					temp_dist[nx][ny] = temp_dist[x][y] + 1;
+					q.push(make_pair(nx, ny));
+				}
+			}
+		}
+	}
+}
+
+
+void dfs(int idx,int cnt) {
+	if (cnt == many_virus) {
+		temp_v = virus_pos;
+		memcpy(temp_dist, dist, sizeof(temp_dist));
+		bfs();
+		int temp = check_map();
+		if (temp != -1) {
+			find_dist = true;
+			count_dist = temp < count_dist ? temp : count_dist;
+		}
+		return;
+	}
+	else {
+		for (int i = idx; i < virus_temp.size(); i++) {
+			if (dist[virus_temp[i].first][virus_temp[i].second] == -3) {
+				dist[virus_temp[i].first][virus_temp[i].second] = 0;
+				virus_pos.push_back(make_pair(virus_temp[i].first, virus_temp[i].second));
+				dfs(i,cnt + 1);
+				dist[virus_temp[i].first][virus_temp[i].second] = -3;
+				virus_pos.pop_back();
+			}
+		}
+	}
+}
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cin >> n >> many_virus;
+	memset(map, -1, sizeof(map));
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			cin >> map[i][j];
+			dist[i][j] = -2;	//빈공간은 -2
+			if (map[i][j] == WALL) {
+				dist[i][j] = DIST_WALL;	//벽은 -1
+			}
+			if (map[i][j] == VIRUS) {
+				virus_temp.push_back(make_pair(i, j));
+				dist[i][j] = -3;	//비활성 바이러스는 전부다 -3
+			}
+		}
+	}
+
+	dfs(0,0);
+	
+	if (find_dist)
+		cout << count_dist <<"\n";
+	else
+		cout << -1 <<"\n";
+
+	return 0;
+}
