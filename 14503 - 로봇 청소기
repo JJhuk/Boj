@@ -1,0 +1,188 @@
+#include <queue>
+#include <iostream>
+#include <vector>
+#include <utility>
+#include <tuple>
+#include <cstring>
+
+#define MAX_MAP 50
+
+#define NORTH 0
+#define WEST 3
+#define EAST 1
+#define SOUTH 2
+
+#define EMPTY 0
+#define WALL 1
+
+#define X 0
+#define Y 1
+#define DIR 2
+
+using namespace std;
+
+int map[MAX_MAP][MAX_MAP];
+bool check_map[MAX_MAP][MAX_MAP];
+int sero, garo;
+int input_x;
+int input_y;
+int input_dir;
+
+int clean_count = 0;
+
+tuple<int, int, int> robot;	//x y 방향
+
+int whatIsLeft(int d) {	//현제방향에 왼쪽을 return 하는거임
+	if (d == NORTH)
+		return WEST;
+	if (d == WEST)
+		return SOUTH;
+	if (d == SOUTH)
+		return EAST;
+	if (d == EAST)
+		return NORTH;
+}
+
+bool goRobot(tuple<int,int,int> &robot) {
+	int nx, ny, x, y;
+	for (int i = 0; i < 4; i++) {	//4번 체크함
+		x = get<X>(robot);
+		y = get<Y>(robot);
+		get<DIR>(robot) = whatIsLeft(get<DIR>(robot));	//방향을 이동한다.
+		switch (get<DIR>(robot)) {	//현제 기준 왼쪽방향
+		case NORTH :	//북
+			nx = x - 1;		//새로 이동 할 좌표
+			ny = y;
+			if (nx >= 0 && nx < sero && ny >= 0 && ny < garo) {	// 벽에 넘는지
+				if (map[nx][ny] == WALL) //벽일경우 pass
+					continue;
+				if (check_map[nx][ny])	//청소가 된 곳이면 pass
+					continue;
+				get<X>(robot) = nx;	//아니면 움직임
+				get<Y>(robot) = ny;
+				check_map[nx][ny] = true;
+				clean_count++;
+				return true;
+			}
+			break;
+		case WEST:	//서
+			nx = x;
+			ny = y - 1;
+			if (nx >= 0 && nx < sero && ny >= 0 && ny < garo) {	// 벽에 넘는지
+				if (map[nx][ny] == WALL) //벽일경우 pass
+					continue;
+				if (check_map[nx][ny])	//청소가 된 곳이면 pass
+					continue;
+				get<X>(robot) = nx;	//아니면 움직임
+				get<Y>(robot) = ny;
+				check_map[nx][ny] = true;
+				clean_count++;
+				return true;
+			}
+			break;
+		case SOUTH:	//남
+			nx = x + 1;
+			ny = y;
+			if (nx >= 0 && nx < sero && ny >= 0 && ny < garo) {	// 벽에 넘는지
+				if (map[nx][ny] == WALL) //벽일경우 pass
+					continue;
+				if (check_map[nx][ny])	//청소가 된 곳이면 pass
+					continue;
+				get<X>(robot) = nx;	//아니면 움직임
+				get<Y>(robot) = ny;
+				check_map[nx][ny] = true;
+				clean_count++;
+				return true;
+			}
+			break;
+		case EAST:	//동
+			nx = x;
+			ny = y + 1;
+			if (nx >= 0 && nx < sero && ny >= 0 && ny < garo) {	// 벽에 넘는지
+				if (map[nx][ny] == WALL) //벽일경우 pass
+					continue;
+				if (check_map[nx][ny])	//청소가 된 곳이면 pass
+					continue;
+				get<X>(robot) = nx;	//아니면 움직임
+				get<Y>(robot) = ny;
+				check_map[nx][ny] = true;
+				clean_count++;
+				return true;
+			}
+			break;
+		}
+	}
+
+	//4번 다 체크해도 다 안될때 방향 유지하고 후진하는거 구현
+	switch (get<DIR>(robot)) {
+		x = get<X>(robot);
+		y = get<Y>(robot);
+	case NORTH:
+		nx = x + 1;
+		ny = y;
+		if (nx >= 0 && nx < sero && ny >= 0 && ny < garo) {
+			if (map[nx][ny] == WALL)
+				return false;
+			get<X>(robot) = nx;
+			get<Y>(robot) = ny;
+		}
+		break;
+	case SOUTH:
+		nx = x - 1;
+		ny = y;
+		if (nx >= 0 && nx < sero && ny >= 0 && ny < garo) {
+			if (map[nx][ny] == WALL)
+				return false;
+			get<X>(robot) = nx;
+			get<Y>(robot) = ny;
+			return true;
+		}
+		break;
+	case WEST:
+		nx = x;
+		ny = y + 1;
+		if (nx >= 0 && nx < sero && ny >= 0 && ny < garo) {
+			if (map[nx][ny] == WALL)
+				return false;
+			get<X>(robot) = nx;
+			get<Y>(robot) = ny;
+			return true;
+		}
+		break;
+	case EAST:
+		nx = x;
+		ny = y - 1;
+		if (nx >= 0 && nx < sero && ny >= 0 && ny < garo) {
+			if (map[nx][ny] == WALL)
+				return false;
+			get<X>(robot) = nx;
+			get<Y>(robot) = ny;
+			return true;
+		}
+		break;
+	}
+}
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	memset(map, -1, sizeof(map));
+	cin >> sero >> garo;
+	cin >> input_x >> input_y >> input_dir;
+
+	robot = make_tuple(input_x, input_y, input_dir);
+	clean_count++;
+	check_map[input_x][input_y] = true;
+
+	for (int i = 0; i < sero; i++) {
+		for (int j = 0; j < garo; j++) {
+			cin >> map[i][j];
+		}
+	}
+
+	while (goRobot(robot));
+	
+	cout << clean_count;
+
+	return 0;
+}
