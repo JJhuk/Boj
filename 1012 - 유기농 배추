@@ -1,0 +1,73 @@
+#include <iostream>
+#include <vector>
+#include <tuple>
+#include <cstring>
+#include <queue>
+#include <utility>
+
+using namespace std;
+
+#define MAX_MAP 50
+#define MAX_PEKIN 2500
+
+int map[MAX_MAP][MAX_MAP];
+bool check[MAX_MAP][MAX_MAP];
+int garo, sero,count_pekin;
+int test_case;
+int count_worm = 0;
+
+int dx[] = { 0,0,1,-1 };
+int dy[] = { 1,-1,0,0 };
+
+void bfs(int x,int y,int cnt) {
+	queue<pair<int, int>> q;
+	q.push(make_pair(x, y));
+	check[x][y] = true;
+	while (!q.empty()) {
+		int tx, ty;
+		tie(tx, ty) = q.front();
+		q.pop();
+
+		for (int i = 0; i < 4; i++) {
+			int nx = tx + dx[i];
+			int ny = ty + dy[i];
+			if (nx >= 0 && nx < sero && ny >= 0 && ny < garo) {
+				if (check[nx][ny])
+					continue;
+				if (map[nx][ny] == 0)
+					continue;
+				if (map[nx][ny] == 1) {
+					check[nx][ny] = true;
+					q.push(make_pair(nx, ny));
+				}
+			}
+		}
+	}
+
+}
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cin >> test_case;
+	while (test_case--) {
+		memset(map, -1, sizeof(map));
+		memset(check, false, sizeof(check));
+		count_worm = 0;
+		cin >> garo >> sero >> count_pekin;
+		for (int i = 0; i < count_pekin; i++) {
+			pair<int, int> input;
+			cin >> input.second >> input.first;
+			map[input.first][input.second] = 1;
+		}
+		for (int i = 0; i < sero; i++) {
+			for (int j = 0; j < garo; j++) {
+				if (map[i][j] == 1 && !check[i][j]) {
+					bfs(i, j, count_worm++);
+				}
+			}
+		}
+		cout << count_worm << "\n";
+	}
+	return 0;
+}
