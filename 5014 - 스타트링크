@@ -1,0 +1,59 @@
+#include <iostream>
+#include <utility>
+#include <queue>
+#include <tuple>
+
+#define MAX 1000001
+
+using namespace std;
+
+int f, s, g, u, d;
+
+bool check[MAX];
+
+queue<pair<int,int>> q;	//현재 위치, 몇번 눌렀는지.
+
+//F는 총 건물층
+//S는 시작 위치
+//G는 startlink
+//u는 이동하는거
+//d는 아래로 d층 내려가는 거
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cin >> f >> s >> g >> u >> d;
+
+	check[s] = true;
+	q.push(make_pair(s,0));
+
+	while (!q.empty()) {
+		int cur_s, cur_count;
+		tie(cur_s, cur_count) = q.front();
+
+		if (cur_s == g) {
+			cout << cur_count;
+			system("pause");
+			return 0;
+		}
+
+		q.pop();
+		
+		if (cur_s + u <= f) {
+			if (!check[cur_s + u]) {
+				check[cur_s + u] = true;
+				q.push(make_pair(cur_s + u, cur_count + 1));
+			}
+
+		}
+		if (cur_s - d >= 0) {
+			if (!check[cur_s - d]) {
+				check[cur_s - d] = true;
+				q.push(make_pair(cur_s - d, cur_count + 1));
+			}
+		}
+	}
+	cout << "use the stairs";
+	system("pause");
+	return 0;
+}
