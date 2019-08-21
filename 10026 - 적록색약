@@ -1,0 +1,91 @@
+#include <queue>
+#include <utility>
+#include <cstdio>
+#include <cstring>
+
+#define MAX_MAP 200
+
+using namespace std;
+
+char map[MAX_MAP][MAX_MAP];
+bool check[MAX_MAP][MAX_MAP];
+
+bool isAdNormal = true;	//적록색약일때
+int n;
+
+int count_color[2];
+
+int dx[] = { 1,-1,0,0 };
+int dy[] = { 0,0,1,-1 };
+
+pair<int, int> temp_p;
+
+
+void bfs(int x,int y,int cnt) {
+	queue<pair<int, int>> q;
+	q.push(make_pair(x, y));
+	check[x][y] = true;
+	while (!q.empty()) {
+		temp_p = q.front();
+		q.pop();
+		for (int i = 0; i < 4; i++) {
+			int nx = temp_p.first + dx[i];
+			int ny = temp_p.second + dy[i];
+			if (nx >= 0 && nx < n && ny >= 0 && ny < n) {
+				if (isAdNormal) {	//적록색약일때
+					if (map[temp_p.first][temp_p.second] == 'B') //블루일때
+					{
+						if (!check[nx][ny]) {
+							if (map[nx][ny] == 'B') {
+								check[nx][ny] = true;
+								q.push(make_pair(nx, ny));
+							}
+						}
+					}
+					else {	//빨강 초록일때
+						if (map[nx][ny] != 'B') {
+							if (!check[nx][ny]) {
+								check[nx][ny] = true;
+								q.push(make_pair(nx, ny));
+							}
+						}
+					}
+				}
+				else
+				{
+					if (map[temp_p.first][temp_p.second] == map[nx][ny]) {	//현재것과 다음것이 같아야만..
+						if (!check[nx][ny]) {
+							check[nx][ny] = true;
+							q.push(make_pair(nx, ny));
+						}
+					}
+				}
+			}
+		}
+	}
+
+}
+
+int main(void) {
+	scanf("%d", &n);
+
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			scanf(" %c", &map[i][j]);
+		}
+	}
+	for (int k = 0; k < 2; k++) {
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (!check[i][j]) {
+					bfs(i, j, count_color[k]++);
+				}
+			}
+		}
+		memset(check, false, sizeof(check));
+		isAdNormal = false;
+	}
+	printf("%d %d", count_color[1], count_color[0]);
+
+	return 0;
+}
