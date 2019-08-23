@@ -1,0 +1,152 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <algorithm>
+#include <tuple>
+
+#define MAX_WATER 201
+#define A 0
+#define B 1
+#define C 2
+
+using namespace std;
+
+bool check_pur[MAX_WATER][MAX_WATER][MAX_WATER];
+bool check_ans[MAX_WATER];
+
+int a, b, c;
+
+queue<tuple<int, int, int>> q;
+
+tuple<int, int, int> cup;
+
+vector<int> ans;
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+
+	cin >> a >> b >> c;
+
+	get<C>(cup) = c;	//c에 물을 채워넣는다.
+	q.push(cup);
+	check_pur[get<A>(cup)][get<B>(cup)][get<C>(cup)] = true;
+
+	while (!q.empty()) {
+		tuple<int, int, int> temp_cup;
+		tuple<int, int, int> pour_cup;
+		pour_cup = temp_cup = q.front();
+		q.pop();
+		if (get<A>(temp_cup) == 0) {	//조건 만족
+			if (!check_ans[get<C>(temp_cup)]) {
+				ans.push_back(get<C>(temp_cup));
+				check_ans[get<C>(temp_cup)] = true;
+			}
+		}
+		if (get<A>(temp_cup) != 0) {	//A가 비어있지않으면	//A가 B,C로 옮김
+			if (get<B>(temp_cup) != b) {	//꽉 차여있으면 X 	//A가 B컵으로 옮기는거
+				get<B>(temp_cup) = get<B>(temp_cup) + get<A>(temp_cup);
+				if (get<B>(temp_cup) > b) {	//물이 흘러넘쳤을때
+					get<A>(temp_cup) =get<B>(temp_cup)- b;
+					get<B>(temp_cup) = b;
+				}
+				else {	//안흘러넘쳤을때
+					get<A>(temp_cup) = 0;
+				}
+				if (!check_pur[get<A>(temp_cup)][get<B>(temp_cup)][get<C>(temp_cup)]) {
+					check_pur[get<A>(temp_cup)][get<B>(temp_cup)][get<C>(temp_cup)] = true;
+					q.push(temp_cup);
+				}
+				temp_cup = pour_cup;
+			}
+			if (get<C>(temp_cup) != c) {
+				get<C>(temp_cup) = get<C>(temp_cup) + get<A>(temp_cup);
+				if (get<C>(temp_cup) > c) {	//물이 흘러넘쳤을때
+					get<A>(temp_cup) = get<C>(temp_cup) - c;
+					get<C>(temp_cup) = c;
+				}
+				else {	//안흘러넘쳤을때
+					get<A>(temp_cup) = 0;
+				}
+				if (!check_pur[get<A>(temp_cup)][get<B>(temp_cup)][get<C>(temp_cup)]) {
+					check_pur[get<A>(temp_cup)][get<B>(temp_cup)][get<C>(temp_cup)] = true;
+					q.push(temp_cup);
+				}
+				temp_cup = pour_cup;
+			}
+		}
+		if (get<B>(temp_cup) != 0) {	//A가 비어있지않으면	//A가 B,C로 옮김
+			if (get<A>(temp_cup) != a) {	//꽉 차여있으면 X 	//A가 B컵으로 옮기는거
+				get<A>(temp_cup) = get<B>(temp_cup) + get<A>(temp_cup);
+				if (get<A>(temp_cup) > a) {	//물이 흘러넘쳤을때
+					get<B>(temp_cup) =get<A>(temp_cup) - a;
+					get<A>(temp_cup) = a;
+				}
+				else {	//안흘러넘쳤을때
+					get<B>(temp_cup) = 0;
+				}
+				if (!check_pur[get<A>(temp_cup)][get<B>(temp_cup)][get<C>(temp_cup)]) {
+					check_pur[get<A>(temp_cup)][get<B>(temp_cup)][get<C>(temp_cup)] = true;
+					q.push(temp_cup);
+				}
+				temp_cup = pour_cup;
+			}
+			if (get<C>(temp_cup) != c) {
+				get<C>(temp_cup) = get<C>(temp_cup) + get<B>(temp_cup);
+					if (get<C>(temp_cup) > c) {	//물이 흘러넘쳤을때
+						get<B>(temp_cup) = get<C>(temp_cup) - c;
+						get<C>(temp_cup) = c;
+					}
+					else {	//안흘러넘쳤을때
+						get<B>(temp_cup) = 0;
+					}
+					if (!check_pur[get<A>(temp_cup)][get<B>(temp_cup)][get<C>(temp_cup)]) {
+						check_pur[get<A>(temp_cup)][get<B>(temp_cup)][get<C>(temp_cup)] = true;
+						q.push(temp_cup);	
+					}
+					temp_cup = pour_cup;
+			}
+		}
+		if (get<C>(temp_cup) != 0) {	//A가 비어있지않으면	//A가 B,C로 옮김
+			if (get<A>(temp_cup) != a) {	//꽉 차여있으면 X 	//A가 B컵으로 옮기는거
+				get<A>(temp_cup) = get<C>(temp_cup) + get<A>(temp_cup);
+				if (get<A>(temp_cup) > a) {	//물이 흘러넘쳤을때
+					get<C>(temp_cup) = get<A>(temp_cup) - a;
+					get<A>(temp_cup) = a;
+				}
+				else {	//안흘러넘쳤을때
+					get<C>(temp_cup) = 0;
+				}
+				if (!check_pur[get<A>(temp_cup)][get<B>(temp_cup)][get<C>(temp_cup)]) {
+					check_pur[get<A>(temp_cup)][get<B>(temp_cup)][get<C>(temp_cup)] = true;
+					q.push(temp_cup);			
+				}
+				temp_cup = pour_cup;
+			}
+			if (get<B>(temp_cup) != b) {
+				get<B>(temp_cup) = get<C>(temp_cup) + get<B>(temp_cup);
+				if (get<B>(temp_cup) > b) {	//물이 흘러넘쳤을때
+					get<C>(temp_cup) = get<B>(temp_cup) - b;
+					get<B>(temp_cup) = b;
+				}
+				else {	//안흘러넘쳤을때
+					get<C>(temp_cup) = 0;
+				}
+				if (!check_pur[get<A>(temp_cup)][get<B>(temp_cup)][get<C>(temp_cup)]) {
+					check_pur[get<A>(temp_cup)][get<B>(temp_cup)][get<C>(temp_cup)] = true;
+					q.push(temp_cup);
+				}
+				temp_cup = pour_cup;
+			}
+		}
+	}
+
+
+	sort(ans.begin(), ans.end());
+
+	for (int i = 0; i < ans.size(); i++) {
+		cout << ans[i] << " ";
+	}
+
+	return 0;
+}
