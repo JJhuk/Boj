@@ -1,0 +1,41 @@
+#include <iostream>
+#include <cmath>
+#include <string>
+using namespace std;
+
+bool broken[10];
+int min_press;
+int n, m;
+int input;
+
+int possible(int x) {
+	string s = to_string(x);
+	int len = 0;
+	for (int i = 0; i < s.length(); i++) {
+		if (broken[s[i] - '0'])
+			return 0;	//버튼이 없으니 누를 수 없음.
+		else
+			len++;
+	}
+	return len;	//각 버튼을 누르는 횟수. 543 누르면 3을 return
+}
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cin >> n;
+	cin >> m;
+	for (int i = 0; i < m; i++) {
+		cin >> input;
+		broken[input] = true;
+	}
+	min_press = abs(n - 100);
+	for (int i = 0; i <= 1000000; i++) {	//범위가 왜 1000000이냐면 0에서 500000인경우와 1000000에서 500000인경우가 있기때문.
+		int len = possible(i);
+		if (len != 0) {	//0이면 버튼 못누름.
+			min_press = abs(i - n) + len < min_press ? abs(i - n) + len : min_press;	//버튼 누르고 + 올리거나/내리거나... 올리기 내리기는 차의 절댓값.
+		}
+	}
+	cout << min_press;
+	return 0;
+}
