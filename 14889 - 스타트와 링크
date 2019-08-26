@@ -1,0 +1,40 @@
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <cmath>
+#define MAP_MAX 20
+using namespace std;
+int n;
+int map[MAP_MAX][MAP_MAX];
+int ans_min = 10e9;
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cin >> n;
+	vector<int> v(n);
+	for (int i = 0; i < n; i++) 
+		for (int j = 0; j < n; j++) 
+			cin >> map[i][j];
+	for (int i = n/2; i < n; i++) 
+		v[i] = 1; //1팀은 0 2팀은 1
+	do {
+		int team1 = 0;
+		int team2 = 0;
+		int minus;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (v[i] == v[j]) {
+					if (v[i] == 0) 
+						team1 += map[i][j];
+					else 
+						team2 += map[i][j];
+				}
+			}
+			
+		}
+		minus = abs(team1 - team2);
+		ans_min = ans_min > minus ? minus : ans_min;
+	} while (next_permutation(v.begin(), v.end()));
+	cout << ans_min;
+	return 0;
+}
