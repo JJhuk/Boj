@@ -1,0 +1,107 @@
+#include <iostream>
+#define WEST 2
+#define EAST 1
+#define NORTH 3
+#define SOUTH 4
+#define MAX_MAP 20
+#define MAX_ORDER 1000
+using namespace std;
+int sero, garo, x, y, k;
+int map[MAX_MAP][MAX_MAP];
+int order[MAX_ORDER];
+int marble[4][3] = {
+	{0,0,0},
+	{0,0,0},
+	{0,0,0},
+	{0,0,0}
+};
+void change_marble(const int &x) {
+	if (x == EAST) {	//동쪽
+		swap(marble[1][1], marble[1][2]);
+		swap(marble[1][2], marble[3][1]);
+		swap(marble[3][1], marble[2][0]);
+	}
+	else if (x == WEST) {	//서쪽
+		swap(marble[3][1], marble[2][0]);
+		swap(marble[1][2], marble[3][1]);
+		swap(marble[1][1], marble[1][2]);
+	}
+	else if (x == NORTH) {	//북쪽
+		swap(marble[0][1], marble[1][1]);
+		swap(marble[1][1], marble[2][1]);
+		swap(marble[2][1], marble[3][1]);
+	}
+	else if (x == SOUTH) {	//남쪽
+		swap(marble[2][1], marble[3][1]);
+		swap(marble[1][1], marble[2][1]);
+		swap(marble[0][1], marble[1][1]);
+	}
+
+}
+bool check(const int &x,const int &y) {
+	if (x >= 0 && x < sero && y >= 0 && y < garo)
+		return true;
+	return false;
+}
+void copy(int &x, int &y,int dir) {
+	int nx, ny;
+	
+	switch (dir)
+	{
+	case EAST:
+		nx = x;
+		ny = y + 1;
+		break;
+	case WEST:
+		nx = x;
+		ny = y - 1;
+		break;
+	case NORTH:
+		nx = x - 1;
+		ny = y;
+		break;
+	case SOUTH:
+		nx = x + 1;
+		ny = y;
+		break;
+	}
+	if (check(nx, ny)) {
+		change_marble(dir);
+		if (map[nx][ny] != 0) {	//칸의 수가 0이 아닌 경우에는 캉에 쓰여 있는 수가 주사위 바닥면에 복사, 그리고 0
+			marble[1][1] = map[nx][ny];
+			map[nx][ny] = 0;
+		}
+		else 	//칸의 수가 0이면, 주사위의 바닥면에 복사.
+			map[nx][ny] = marble[1][1];
+		cout << marble[3][1] << "\n";	//주사위의 윗 부분.
+		x = nx;
+		y = ny;
+	}
+}
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cin >> sero >> garo >> x >> y >> k;
+	for (int i = 0; i < sero; i++) 
+		for (int j = 0; j < garo; j++) 
+			cin >> map[i][j];
+	for (int i = 0; i < k; i++) 
+		cin >> order[i];
+	for (int i = 0; i < k; i++) {	//명령 만큼
+		switch(order[i]) {
+		case EAST:	//동쪽
+			copy(x, y, EAST);
+			break;
+		case WEST:	//서쪽
+			copy(x, y, WEST);
+			break;
+		case NORTH:	//븍쪽
+			copy(x, y,NORTH);
+			break;
+		case SOUTH:	//남쪽
+			copy(x, y, SOUTH);
+			break;
+		}
+	}
+	return 0;
+}
