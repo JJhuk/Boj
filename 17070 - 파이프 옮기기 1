@@ -1,0 +1,118 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+#define MAP_MAX 16
+#define EMPTY 0
+#define WALL 1
+#define DIAGONAL 0
+#define HORIZONTAL 1
+#define VERTICAL 2
+using namespace std;
+
+int map[MAP_MAX][MAP_MAX];
+int n;
+int ans = 0;
+
+bool check[MAP_MAX][MAP_MAX];
+
+int cur_dir(pair<int, int> a, pair<int, int> b) {
+	if (a.first == b.first && a.second != b.second)
+		return HORIZONTAL;
+	if (a.second == b.second && a.first != b.first)
+		return VERTICAL;
+	return DIAGONAL;
+}
+
+
+void dfs(pair<int, int> a, pair<int, int> b) {
+	if (b.first == n - 1 && b.second == n - 1) {	//답을 찾았을때
+		ans++;
+		return;
+	}	
+	switch (cur_dir(a, b)) {
+	case VERTICAL:	//세로일때는 세로, 대각선만 가능
+		if (b.first + 1 < n && b.second < n && map[b.first + 1][b.second] != WALL) {	//세로 
+			if (!check[b.first+ 1][b.second]) {
+				check[b.first + 1][b.second] = true;
+				dfs(b, make_pair(b.first + 1, b.second));
+				check[b.first + 1][b.second] = false;
+			}
+		}
+		if (b.first + 1 < n&& b.second + 1 < n&& map[b.first][b.second + 1] != WALL && map[b.first + 1][b.second + 1] != WALL && map[b.first + 1][b.second] != WALL) {
+			if (!check[b.first][b.second + 1] && !check[b.first + 1][b.second + 1] && !check[b.first + 1][b.second]) {
+				check[b.first][b.second + 1] = true;
+				check[b.first + 1][b.second + 1] = true;
+				check[b.first + 1][b.second] = true;
+				dfs(b, make_pair(b.first + 1, b.second + 1));
+				check[b.first][b.second + 1] = false;
+				check[b.first + 1][b.second + 1] = false;
+				check[b.first + 1][b.second] = false;
+			}
+		}
+		break;
+	case HORIZONTAL:	//가로일때는 가로, 대각선만 가능
+		if (b.first < n && b.second + 1 < n && map[b.first][b.second + 1] != WALL) {	//가로
+			if (!check[b.first][b.second + 1]) {
+				check[b.first][b.second + 1] = true;
+				dfs(b, make_pair(b.first, b.second + 1));
+				check[b.first][b.second + 1] = false;
+			}
+		}
+		if (b.first + 1 < n&& b.second + 1 < n&& map[b.first][b.second + 1] != WALL && map[b.first + 1][b.second + 1] != WALL && map[b.first + 1][b.second] != WALL) {
+			if (!check[b.first][b.second + 1] && !check[b.first + 1][b.second + 1] && !check[b.first + 1][b.second]) {
+				check[b.first][b.second + 1] = true;
+				check[b.first + 1][b.second + 1] = true;
+				check[b.first + 1][b.second] = true;
+				dfs(b, make_pair(b.first + 1, b.second + 1));
+				check[b.first][b.second + 1] = false;
+				check[b.first + 1][b.second + 1] = false;
+				check[b.first + 1][b.second] = false;
+			}
+		}
+		break;
+	case DIAGONAL:	//대각선일때는 3개 다 가능
+		if (b.first < n && b.second + 1 < n && map[b.first][b.second + 1] != WALL) {	//가로
+			if (!check[b.first][b.second + 1]) {
+				check[b.first][b.second + 1] = true;
+				dfs(b, make_pair(b.first, b.second + 1));
+				check[b.first][b.second + 1] = false;
+			}
+		}
+		if (b.first + 1 < n && b.second < n && map[b.first + 1][b.second] != WALL) {	//세로 
+			if (!check[b.first + 1][b.second]) {
+				check[b.first + 1][b.second] = true;
+				dfs(b, make_pair(b.first + 1, b.second));
+				check[b.first + 1][b.second] = false;
+			}
+		}
+		if (b.first + 1 < n&& b.second + 1 < n&& map[b.first][b.second + 1] != WALL && map[b.first + 1][b.second + 1] != WALL && map[b.first + 1][b.second] != WALL) {
+			if (!check[b.first][b.second + 1] && !check[b.first + 1][b.second + 1] && !check[b.first + 1][b.second]) {
+				check[b.first][b.second + 1] = true;
+				check[b.first + 1][b.second + 1] = true;
+				check[b.first + 1][b.second] = true;
+				dfs(b, make_pair(b.first + 1, b.second + 1));
+				check[b.first][b.second + 1] = false;
+				check[b.first + 1][b.second + 1] = false;
+				check[b.first + 1][b.second] = false;
+			}
+		}
+		break;
+	}
+}
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie();
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			cin >> map[i][j];
+		}
+	}
+	check[0][0] = true;
+	check[0][1] = true;
+	dfs(make_pair(0, 0), make_pair(0, 1));
+	cout << ans;
+	return 0;
+}
