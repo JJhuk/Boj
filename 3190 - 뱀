@@ -1,0 +1,208 @@
+#include <iostream>
+#include <vector>
+#include <deque>
+#include <tuple>
+#include <algorithm>
+#define MAP_MAX 100
+#define APPLE 2
+#define SNAKE 1
+#define EMPTY 0
+using namespace std;
+
+int map[MAP_MAX][MAP_MAX];
+
+deque<pair<int,char>> order;
+
+int n, k , l;	
+int a, b;	//사과의 위치
+char c;	//방향
+int d;	//시간
+char next_dir;
+
+typedef struct S_SNAKE {
+	deque<pair<int, int>> pos;	//좌표
+	int len;	//길이
+	char dir;	//N S W E
+	int time;
+}_S_SNAKE;
+
+S_SNAKE snake;
+
+//void print_map() {	//뱀 나오는거 test
+//	system("cls");
+//	for (int i = 0; i < n; i++) {
+//		for (int j = 0; j < n; j++) {
+//			if (map[i][j] == EMPTY)
+//				printf(" ");
+//			if (map[i][j] == APPLE)
+//				printf("!");
+//			if (map[i][j] == SNAKE)
+//				printf("@");
+//		}
+//		printf("\n");
+//	}
+//	printf("%d\n", snake.time);
+//	system("pause");
+//}
+
+bool check_go(int nx, int ny) {
+	if (nx >= 0 && nx < n && ny >= 0 && ny < n) //벽을 통과하는지
+		if (map[nx][ny] != SNAKE) //자기 몸에 닿이는지
+			return true;
+		else
+			return false;
+	return false;
+}
+
+void move_snake(const int nx,const int ny) {
+	if (map[nx][ny] == APPLE) {	//사과가 있을때
+		map[nx][ny] = SNAKE;	//다음 좌표에 뱀을 넣어주고,
+		snake.len++;
+		snake.pos.push_front(make_pair(nx, ny));	//사과 먹은 자리를 앞에 넣어줌
+	}
+	else {	//사과가 없을 경우 이쪽에서 문제가 생김
+		map[nx][ny] = SNAKE;	//뱀의 머리부분
+		snake.pos.push_back(make_pair(nx, ny));
+		int temp_x, temp_y;
+		tie(temp_x, temp_y) = snake.pos.front();
+		snake.pos.pop_front();
+		for (int i = 1; i < snake.len; i++) {	//뱀의 머리와 꼬리를 제외한 부분은 밀어준다.
+			snake.pos.push_back(make_pair(temp_x, temp_y));
+			tie(temp_x, temp_y) = snake.pos.front();
+			snake.pos.pop_front();
+		}
+		map[temp_x][temp_y] = EMPTY;	//뱀의 원래 꼬리부분은 지워준다.
+	}
+	return;
+}
+
+pair<int,int> switch_dir(const char now_dir,char &next_dir,const int x,const int y) {	//머리부분의 다음 방향 좌표를 알려주는 함수
+	int dx, dy;
+	switch (now_dir) {
+	case 'N' :	//북쪽으로 향함
+		if (next_dir == 'D') {
+			dx = x;
+			dy = y + 1;
+			snake.dir = 'E';
+		}
+		else if (next_dir == 'L') {
+			dx = x;
+			dy = y - 1;
+			snake.dir = 'W';
+		}
+		break;
+	case 'S' :	//남쪽으로 향함
+		if (next_dir == 'D') {
+			dx = x;
+			dy = y - 1;
+			snake.dir = 'W';
+		}
+		else if (next_dir == 'L') {
+			dx = x;
+			dy = y + 1;
+			snake.dir = 'E';
+		}
+		break;
+	case 'W':	//서쪽으로 향함
+		if (next_dir == 'D') {
+			dx = x - 1;
+			dy = y;
+			snake.dir = 'N';
+		}
+		else if (next_dir == 'L') {
+			dx = x + 1;
+			dy = y;
+			snake.dir = 'S';
+		}
+		break;
+	case 'E':	//동쪽으로 향함
+		if (next_dir == 'D') {
+			dx = x + 1;
+			dy = y;
+			snake.dir = 'S';
+		}
+		else if (next_dir == 'L') {
+			dx = x - 1;
+			dy = y;
+			snake.dir = 'N';
+		}
+		break;
+	}
+	next_dir = '\0';	//참조자로 사용하였기 때문에 다시 초기화
+	return make_pair(dx, dy);
+}
+
+void switch_dir(int &nx,int &ny) {
+	switch (snake.dir) {
+	case 'N':
+		nx = snake.pos.front().first - 1;
+		ny = snake.pos.front().second;
+		break;
+	case 'S':
+		nx = snake.pos.front().first + 1;
+		ny = snake.pos.front().second;
+		break;
+	case 'W':
+		nx = snake.pos.front().first;
+		ny = snake.pos.front().second - 1;
+		break;
+	case 'E':
+		nx = snake.pos.front().first;
+		ny = snake.pos.front().second + 1;
+		break;
+	}
+}
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cin >> n;
+	cin >> k;
+
+	
+	//SNAKE INIT
+	next_dir = '\0';
+	snake.dir = 'E';
+	snake.len = 1;
+	snake.pos.push_back(make_pair(0, 0));
+	snake.time = 0;
+	map[snake.pos.front().first][snake.pos.front().second] = SNAKE;
+
+	for (int i = 0; i < k; i++) {
+		cin >> a >> b;
+		map[a - 1][b - 1] = APPLE;
+	}
+	cin >> l;
+	for (int i = 0; i < l; i++) {
+		cin >> d >> c;
+		order.push_back(make_pair(d, c));
+	}
+
+	int nx, ny;	//처음 위치에서 다음 좌표는 오른쪽임
+	tie(nx, ny) = snake.pos.front();
+	ny++;	
+
+	while (true) {
+		//print_map();
+-		snake.time++;
+		if (check_go(nx,ny)) {	//갈 수 있는지 확인
+			move_snake(nx, ny);
+		}
+		else {
+			break;	//못가면 종료
+		}
+		if (!order.empty() && snake.time == order.front().first) {	//활동을 한 후, 시간이 맞으면
+			next_dir = order.front().second;	//방향을 변경을 해 주고
+			order.pop_front();	//수행한 order은 pop
+		}
+		if (next_dir != '\0') {	//방향 전환이 일어날 떄
+			tie(nx, ny) = switch_dir(snake.dir, next_dir, snake.pos.front().first, snake.pos.front().second);	// 머리 부분 다음 방향을 미리 받음
+		}
+		else {
+			switch_dir(nx, ny);
+		}
+	}
+	cout << snake.time <<"\n";
+	//system("pause");
+	return 0;
+}
