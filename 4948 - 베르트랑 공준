@@ -1,0 +1,37 @@
+#include <iostream>
+#define MAX_NUM 123456*2+1
+using namespace std;
+
+int m, n;
+int test_case;
+bool check[MAX_NUM];
+void eratos(long long n) {
+	for (long long i = 2; i <= n; i++) {
+		if (!check[i]) {
+			for (long long j = i * i; j <= n; j+=i) {
+				check[j] = true;
+			}
+		}
+	}
+}
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	check[1] = true;
+	eratos(MAX_NUM);
+	while (true) {
+		int ans = 0;
+		cin >> n;
+		if (n == 0)
+			break;
+		else {
+			for (int i = n + 1; i <= 2 * n; i++) {  //(n,2n] 구간
+				if (!check[i])  //걸리지 않으면 소수임
+					ans++;
+			}
+			cout << ans << "\n";
+		}
+	}
+	return 0;
+}
