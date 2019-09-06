@@ -1,0 +1,52 @@
+#include <iostream>
+#include <cstring>
+#define GARO 0
+#define SERO 1
+using namespace std;
+int map[4][4];
+int sero, garo;
+int main(void) {
+	scanf("%d %d", &sero, &garo);
+	for (int i = 0; i < sero; i++) {
+		for (int j = 0; j < garo; j++) {
+			scanf("%1d", &map[i][j]);
+		}
+	}
+	int ans = 0;
+	for (int s = 0; s < (1 << (garo*sero)); s++) {	//가로*세로 만큼 블럭칸을 만듬. n*m이 최댓값이 16이면 1111111111111111 <- 전부다 세로로 보라는 의미
+		int sum = 0;	//각 경우의 수의 합
+		for (int i = 0; i < sero; i++) {	//가로체크
+			int cur = 0;
+			for (int j = 0; j < garo; j++) {
+				int k = i * garo + j;	//2차원 배열을 1차원으로 줄였느니.. 각행*garo + 열
+				if ((s&(1 << k)) == GARO) {	//만약에 지금 블럭칸에 k라는 수가 가로이면?
+					cur = cur * 10 + map[i][j];	//10씩 곱한걸 더해준다. (연속되어있으면 전 수가 10이 더해져 1234 이런식으로 됨)
+				}
+				else {	//세로인 경우에는 앞에 구했던 값들을 sum에 더해주고 다시 cur를 0으로
+					sum += cur;	
+					cur = 0;
+				}
+			}
+			sum += cur;	//맨 마지막이 가로로 끝나는 경우.
+		}
+		for (int j = 0; j < garo; j++) {	//세로체크 (위에 것과 반대로 해주면 됨)
+			int cur = 0;
+			for (int i = 0; i < sero; i++) {
+				int k = i * garo + j;
+				if ((s&(1 << k))!= 0) {
+					cur = cur * 10 + map[i][j];
+				}
+				else {
+					sum += cur;
+					cur = 0;
+				}
+			}
+			sum += cur;
+		}
+		ans = ans <= sum ? sum : ans;
+	}
+	printf("%d\n", ans);
+
+	system("pause");
+	return 0;
+}
