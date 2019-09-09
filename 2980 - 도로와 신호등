@@ -1,0 +1,73 @@
+#include <iostream>
+#include <deque>
+#include <vector>
+#include <algorithm>
+#include <tuple>
+#define D 0
+#define R 1
+#define G 2
+#define GO 3
+int n, l;
+using namespace std;
+
+typedef struct truck {
+	int time;
+	int pos;
+	bool stop;
+}_TRUCK;
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cin >> n >> l;
+	truck t;
+	t.time = 0;
+	t.pos = 0;
+	t.stop = false;
+	deque<tuple<int, int, int, bool>> v(n);
+	deque<int> d(n);
+	for (int i = 0; i < n; i++) {
+		cin >> get<D>(v[i]);
+		cin >> get<R>(v[i]);
+		cin >> get<G>(v[i]);
+		get<GO>(v[i]) = false;	//초기값은 false;
+	}
+
+	while (true) {
+		if (t.pos == l) {
+			if (!t.stop)
+				break;
+		}
+		t.time++;
+		if(!t.stop)
+			t.pos++;
+		for (int i = 0; i < v.size(); i++) {
+			d[i]++;
+			if (get<GO>(v[i]) == false) { //현재 불이 빨간불일때
+				if (d[i] == get<R>(v[i]) ) {
+					get<GO>(v[i]) = true;
+					d[i] = 0;
+				}
+			}
+			else {
+				if (d[i]  == get<G>(v[i])) {
+					get<GO>(v[i]) = false;
+					d[i] = 0;
+				}
+			}
+		}
+		
+		if (!v.empty() && t.pos == get<D>(v.front())) {	//현재 위치가 신호등 위치이면?
+			if (get<GO>(v.front())) {
+				t.stop = false;
+				v.pop_front();
+				d.pop_front();
+			}
+			else {
+				t.stop = true;
+			}
+		}
+	}
+	cout << t.time ;
+	return 0;
+}
