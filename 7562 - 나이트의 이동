@@ -1,0 +1,52 @@
+#include <iostream>
+#include <tuple>
+#include <cstring>
+#include <queue>
+#define MAP_MAX 301
+#define POS_MAX 8
+using namespace std;
+int l;
+int test_case;
+int map[MAP_MAX][MAP_MAX];
+bool check[MAP_MAX][MAP_MAX];
+int dx[] = { -2,-1,+1,+2,+2,+1,-1,-2 };	//나이트가 움직일 수 있는 방향
+int dy[] = { +1,+2,+2,+1,-1,-2,-2,-1 };
+pair<int, int> now;	//처음 나이트의 위치
+pair<int, int> goal;	//목표 위치
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cin >> test_case;
+	while (test_case--) {
+		cin >> l;
+		cin >> now.first >> now.second;
+		cin >> goal.first >> goal.second;
+		queue<pair<int, int> > q;
+		q.push(make_pair(now.first, now.second));
+		check[now.first][now.second];
+		while (!q.empty()) {
+			int x, y;
+			tie(x, y) = q.front();
+			q.pop();
+			if (x == goal.first && y == goal.second) {
+				cout << map[x][y] << "\n";
+				memset(check, false, sizeof(check));
+				memset(map, 0, sizeof(map));
+				break;
+			}
+			for (int i = 0; i < POS_MAX; i++) {
+				int nx = x + dx[i];
+				int ny = y + dy[i];
+				if (nx >= 0 && nx < l && ny >= 0 && ny < l) {
+					if (check[nx][ny])
+						continue;
+					q.push(make_pair(nx, ny));
+					check[nx][ny] = true;
+					map[nx][ny] = map[x][y] + 1;
+				}
+			}
+		}
+	}
+	system("pause");
+	return 0;
+}
