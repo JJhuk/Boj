@@ -1,0 +1,93 @@
+#include <iostream>
+#include <vector>
+#define MAP_MAX 1050
+#define Q 2
+#define K 3
+#define P 4
+int map[MAP_MAX][MAP_MAX];
+
+int K_dx[] = { -2,-1,+1,+2,+2,+1,-1,-2 };	//나이트가 움직일 수 있는경우
+int K_dy[] = { +1,+2,+2,+1,-1,-2,-2,-1 };
+int Q_dx[] = { 1,-1,1,-1 };	//퀸의 대각선 움직임
+int Q_dy[] = { 1,-1,-1,1 };
+
+int n, m, count_Q, count_K, count_P;
+int a, b;
+int ans;
+
+using namespace std;
+int main() {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cin >> n >> m;
+
+	cin >> count_Q; //퀸의 정보
+	vector<pair<int, int>> pos_Q;
+	for (int i = 0; i < count_Q; i++) {
+		cin >> a >> b;
+		pos_Q.push_back(make_pair(a, b));
+	}
+
+	cin >> count_K; //나이트의 정보
+	for (int i = 0; i < count_K; i++) {
+		cin >> a >> b;
+		map[a][b] = K;
+		for (int j = 0; j < 8; j++) {
+			if (a + K_dx[j] >= 1 && a + K_dx[j] <= n && b + K_dy[j] >= 1 && b + K_dy[j] <= m)
+				if(map[a + K_dx[j]][b + K_dy[j]] == 0 || map[a + K_dx[j]][b + K_dy[j]] == 1)
+					map[a + K_dx[j]][b + K_dy[j]] = 1;
+		}
+	}
+
+	cin >> count_P;
+	for (int i = 0; i < count_P; i++) {
+		cin >> a >> b;
+		map[a][b] = P;	//폰은 못움직임
+	}
+	for (int i = 0; i < pos_Q.size(); i++) {
+		map[pos_Q[i].first][pos_Q[i].second] = Q;
+		for (int j = pos_Q[i].second - 1; j >= 1; j--) {	//왼쪽
+			if (map[pos_Q[i].first][j] != 0 && map[pos_Q[i].first][j] != 1)	
+				break;
+			map[pos_Q[i].first][j] = 1;  
+		}
+		for (int j = pos_Q[i].first - 1; j >= 1; j--) {	//위
+			if (map[j][pos_Q[i].second] != 0 && map[j][pos_Q[i].second] != 1)	
+				break;
+			map[j][pos_Q[i].second] = 1; 
+		}
+		for (int j = pos_Q[i].first + 1; j <= n; j++) {	//아래
+			if (map[j][pos_Q[i].second] != 0 && map[j][pos_Q[i].second] != 1)
+				break;
+			map[j][pos_Q[i].second] = 1;  
+		}
+		for (int j = pos_Q[i].second + 1; j <= m; j++) {	//오른쪽
+			if (map[pos_Q[i].first][j] != 0 && map[pos_Q[i].first][j] != 1)	
+				break;
+			map[pos_Q[i].first][j] = 1;  
+		}
+		for (int j = 0; j < 4; j++) {	//퀸 대각선
+			int plus = 1;
+			int nx, ny;
+			while (true) {
+				nx = pos_Q[i].first + Q_dx[j] * plus;
+				ny = pos_Q[i].second + Q_dy[j] * plus;
+				if (map[nx][ny] != 0 && map[nx][ny] != 1)	//다른 친구들이 막고있으면 못감
+					break;
+				if (nx>= 1 && nx<= n && ny>= 1 && ny<= m)
+					map[nx][ny] = 1;
+				else
+					break;
+				plus++;
+			}
+		}
+	}
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= m; j++) {
+			if (map[i][j] == 0)
+				ans++;
+		}
+	}
+	cout << ans <<"\n";
+	return 0;
+}
