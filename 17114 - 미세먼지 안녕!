@@ -70,7 +70,7 @@ int main(void) {
 			}
 		}
 		int size = dust.size();
-		for (int i = 0; i < size; i++) {	//미세먼지 순환
+		for (int i = 0; i < size; i++) {	//미세먼지 
 			x = dust[i].x;
 			y = dust[i].y;
 			cnt = 0;
