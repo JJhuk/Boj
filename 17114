@@ -1,0 +1,161 @@
+#include <iostream>
+#include <queue>
+#include <tuple>
+#include <vector>
+#include <cstring>
+#define MAP_MAX 1000
+
+typedef struct _POINT {
+	int x;
+	int y;
+}point;
+
+int up_dx[] = { 0,-1,0,1 };	//반시계방향
+int up_dy[] = { 1,0,-1,0 };
+
+int down_dx[] = { 0,1,0,-1 };	//시계방향
+int down_dy[] = { 1,0,-1,0 };
+
+int dx[] = { 1,-1,0,0 };	//상하좌우
+int dy[] = { 0,0,-1,1 };
+
+int r, c;	//r*c격자판
+int t;
+int map[MAP_MAX][MAP_MAX];
+int temp_map[MAP_MAX][MAP_MAX];
+using namespace std;
+
+point up, down;
+vector<point> dust;
+int ans;
+int x, y;
+int change;
+int cnt = 0;
+
+void print_map(){
+	system("cls");
+	for (int i = 0; i < r; i++) {
+		for (int j = 0; j < c; j++) {
+			cout << map[i][j];
+		}
+		cout << "\n";
+	}
+	system("pause");
+}
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cin >> r >> c >> t;	//세로 가로 시간
+	bool isUP = true;
+	for (int i = 0; i < r; i++) {
+		for (int j = 0; j < c; j++) {	
+			cin >> map[i][j];
+			if (map[i][j] == -1) {
+				if (isUP) {
+					up = { i,j };
+					isUP = false;
+				}
+				else
+					down = { i,j };
+			}
+		}
+	}
+	while (t--) {
+		dust.clear();
+		memset(temp_map, 0, sizeof(temp_map));
+		for (int i = 0; i < r; i++) {
+			for (int j = 0; j < c; j++) {
+				if (map[i][j] != 0 && map[i][j] != -1)
+					dust.push_back({ i,j });	//미세먼지 좌표 넣음
+			}
+		}
+		int size = dust.size();
+		for (int i = 0; i < size; i++) {	//미세먼지 순환
+			x = dust[i].x;
+			y = dust[i].y;
+			cnt = 0;
+			for (int j = 0; j < 4; j++) {
+				int nx = x + dx[j];
+				int ny = y + dy[j];
+				if (nx >= 0 && nx < r && ny >= 0 && ny < c) {
+					if (map[nx][ny] != -1 && ((nx!=up.x)||(ny != up.y)) && ((nx != down.x) || (ny != down.y))) {	//공기청정기가 아니면?
+						temp_map[nx][ny] += map[x][y] / 5; //이게 그냥 map으로 넣어버리면 퍼질때 영향을 미침
+						cnt++;
+					}
+				}
+			}
+			map[x][y] = map[x][y] - ((map[x][y]/5) * cnt);
+		}
+		for (int i = 0; i < r; i++) {	
+			for (int j = 0; j < c; j++) {
+				if (temp_map[i][j] != -1)
+					map[i][j] += temp_map[i][j];	//그래서 저장한걸 map에 한꺼번에 넣어준다.
+			}
+		}
+
+		x = up.x;
+		y = up.y;
+		change = 0;
+		vector<int> v;	//순환하는 고리 자체를 벡터안에 집어넣는다. 단 0을 집어넣음
+		v.push_back(0);
+		while (true) {
+			int nx = up_dx[change] + x;
+			int ny = up_dy[change] + y;
+			if ((nx == up.x) && (ny == up.y))
+				break;
+			if ((nx == up.x&&ny== c - 1) || (nx == 0 && ny == c - 1) || (nx == 0 && ny == 0))	//모서리 부분 turn
+				change++;
+			v.push_back(map[nx][ny]);
+			x = nx;
+			y = ny;
+		}
+		change = 0;
+		x = up.x;
+		y = up.y;
+		for (int i = 0; i < v.size()-1;i++) {	//0을 집어넣고 + 청소기 때문에 맨 마지막 정화도댔다고 생각해서 -1만큼돌림
+			int nx = up_dx[change] + x;
+			int ny = up_dy[change] + y;
+			if ((nx == up.x&&ny == c - 1) || (nx == 0 && ny == c - 1) || (nx == 0 && ny == 0))	//모서리 부분
+				change++;
+			map[nx][ny] = v[i];
+			x = nx;
+			y = ny;
+		}
+		v.clear();
+		x = down.x;
+		y = down.y;
+		change = 0;
+		v.push_back(0);
+		while (true) {
+			int nx = down_dx[change] + x;
+			int ny = down_dy[change] + y;
+			if ((nx == down.x) && (ny == down.y))
+				break;
+			if ((nx == down.x&&ny== c-1) || (nx ==r-1 && ny == c -1) || (nx == r-1 && ny == 0))	//모서리 부분
+				change++;
+			v.push_back(map[nx][ny]);
+			x = nx;
+			y = ny;
+		} 
+		change = 0;
+		x = down.x;
+		y = down.y;
+		for (int i = 0; i <v.size()-1; i++) {
+			int nx = down_dx[change] + x;
+			int ny = down_dy[change] + y;
+			if ((nx == down.x&&ny == c - 1) || (nx == r - 1 && ny == c - 1) || (nx == r - 1 && ny == 0))	//모서리 부분
+				change++;
+			map[nx][ny] = v[i];
+			x = nx;
+			y = ny;
+		}
+	}
+	for (int i = 0; i < r; i++) {
+		for (int j = 0; j < c; j++) {
+			if (map[i][j] != -1)
+				ans += map[i][j];
+		}
+	}
+	cout << ans;
+	return 0;
+}
