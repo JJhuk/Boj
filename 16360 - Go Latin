@@ -1,0 +1,60 @@
+#include <iostream>
+#include <string>
+using namespace std;
+int test_case;
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cin >> test_case;
+	while (test_case--) {
+		string s;
+		cin >> s;
+		switch (s[s.size() - 1]) {
+		case 'a':
+			s = s + "s";
+			break;
+		case 'i':
+			s = s + "os";
+			break;
+		case 'y':
+			s = s.substr(0, s.size() - 1) + "ios";
+			break;
+		case 'l':
+			s = s + "es";
+			break;
+		case 'n':
+			s = s.substr(0, s.size() - 1) + "anes";
+			break;
+		case 'e':
+			if (s[s.size() - 2] == 'n')
+				s = s.substr(0, s.size() - 2) + "anes";
+			else
+				s = s + "us";
+			break;
+		case 'o':
+			s = s + "s";
+			break;
+		case 'r':
+			s = s + "es";
+			break;
+		case 't':
+			s = s + "as";
+			break;
+		case 'u':
+			s = s + "s";
+			break;
+		case 'v':
+			s = s + "es";
+			break;
+		case 'w':
+			s = s + "as";
+			break;
+		default:
+			s = s + "us";
+			break;
+		}
+		cout << s << "\n";
+	}
+	system("pause");
+	return 0;
+}
