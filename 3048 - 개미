@@ -1,0 +1,44 @@
+#include <iostream>
+#include <deque>
+using namespace std;
+typedef struct _ANT {
+	char name;
+	char dir;   //L R
+}ant;
+deque<ant> dq;
+int n1, n2, t;
+
+void print_ant() {
+	for (int i = 0; i < dq.size(); i++) {
+		cout << dq[i].dir << " ";
+	}
+	cout << "\n";
+}
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cin >> n1 >> n2;
+	for (int i = 0; i < n1; i++) {
+		char input;
+		cin >> input;
+		dq.push_front({ input,'R' });
+	}
+	for (int i = 0; i < n2; i++) {
+		char input;
+		cin >> input;
+		dq.push_back({ input,'L' });
+	}
+	cin >> t;
+	while (t--) {
+		for (int i = 0; i < dq.size(); i++) {
+			if (i + 1 < dq.size() && (dq[i].dir == 'R' && dq[i].dir == 'L')) {	//dq[i].dir != dq[i + 1].dir 이렇게 되버리면 맨 왼쪽 L일때도 변경이 되버림. 맨왼쪽 L은 pass해야죠?
+				swap(dq[i], dq[i + 1]); 
+				i++;
+			}
+		}
+		print_ant();
+	}
+	for (int i = 0; i < dq.size(); i++)
+		cout << dq[i].name;
+	return 0;
+}
