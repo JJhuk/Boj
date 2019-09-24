@@ -1,0 +1,36 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+using namespace std;
+vector<pair<string,int> > v;	//원래 도감번호를 위해 pair
+int n, m;
+bool comp(const pair<string, int> &a, const pair<string, int> &b) {
+	return a.first < b.first;
+}
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cin >> n >> m;
+	string temp;
+	int i = 1;
+	while (n--) {
+		cin >> temp;
+		v.push_back(make_pair(temp,i++));
+	}
+	vector<pair<string, int> > t = v;
+	sort(v.begin(), v.end());	//이진탐색을 위해선 sorted가 되어야하는데 인덱스가 꼬이니 복사를 한 것.
+	vector<pair<string, int> >::iterator iter;
+	while (m--) {
+		cin >> temp;
+		if (temp[0] >= 'A' && temp[0] <= 'Z') {	//문자일때
+			iter = lower_bound(v.begin(), v.end(),make_pair(temp,0),comp);	//이진탐색
+			cout << iter->second << "\n";
+		}
+		else {
+			int index = stoi(temp) - 1;	
+			cout << t[index].first << "\n";
+		}
+	}
+	return 0;
+}
