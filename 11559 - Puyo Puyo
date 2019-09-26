@@ -1,0 +1,108 @@
+#include <cstdio>
+#include <vector>
+#include <queue>
+#include <tuple>
+#include <stack>
+#include <deque>
+#include <cstring>
+
+char map[12][6];
+bool check[12][6];
+
+int dx[] = { 1,-1,0,0 };
+int dy[] = { 0,0,1,-1 };
+
+using namespace std;
+
+int ans = 0;
+
+//갓지인선뱃님..
+//왼쪽부터 한줄씩 보겠다.
+//그리고 위에서 내려오는 방식으로.
+void gravity() {
+	for (int y = 0; y < 6; y++) {	
+		deque<char> v;
+		for (int x = 0; x < 12; x++) {
+			if (map[x][y] != 'x') {		//x를 제외하고 다 넣어버림
+				v.push_back(map[x][y]);
+			}
+		}
+		while (v.size() != 12) {
+			v.push_front('.');	//12만큼 .을 넣어줌
+		}
+		for (int x = 0; x < 12; x++) {
+			map[x][y] = v.front();	//맵에 대입
+			v.pop_front();
+		}
+	}
+	ans++;
+	return;
+}
+
+bool bfs(int x, int y) {
+	queue<pair<int, int> > q;
+	vector<pair<int, int> > v;
+
+	q.push(make_pair(x, y));
+	v.push_back(make_pair(x, y));
+	check[x][y] = true;
+	int cnt = 0;
+	while (!q.empty()) {
+		int x, y;
+		tie(x, y) = q.front();
+		q.pop();
+		for (int i = 0; i < 4; i++) {
+			int nx = x + dx[i];
+			int ny = y + dy[i];
+			if (nx >= 0 && nx < 12 && ny >= 0 && ny < 6) {
+				if (!check[nx][ny]) {	//방문을 하지 않았다면
+					if (map[nx][ny] == map[x][y]) {	//본인 맵기호랑 같으면
+						q.push(make_pair(nx, ny));
+						v.push_back(make_pair(nx, ny));
+						check[nx][ny] = true;
+					}
+				}
+			}
+		}
+	}
+	if (v.size() >= 4) {
+		while (!v.empty()) {	//터질 것들은 전부다 x
+			int x, y;
+			tie(x, y) = v.back();
+			v.pop_back();
+			map[x][y] = 'x';
+		}
+		return true;
+	}
+	return false;
+}
+
+int main(void) {
+
+	for (int i = 0; i < 12; i++) {
+		for (int j = 0; j < 6; j++) {
+			scanf(" %1c", &map[i][j]);
+		}
+	}
+	while (true) {
+		bool isPop = false;
+		for (int i = 0; i < 12; i++) {
+			for (int j = 0; j < 6; j++) {
+				if (!check[i][j] && map[i][j] != '.') {	//.은 pass
+					if (bfs(i, j))	//4개이상이면 return true
+						isPop = true;	
+				}
+			}
+		}
+		if (isPop) {
+			memset(check, false, sizeof(check));	//터지고 난 후는 다른 맵이니까 다시 체크해주어야함
+			gravity();	//터진게 있으면 내려주어야겠죠?
+			isPop = false;
+		}
+		else {
+			break;
+		}
+	}
+	printf("%d\n", ans);
+	return 0;
+}
