@@ -1,0 +1,17 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+int main(void) {
+	int k;
+	cin >> k;
+	vector<pair<int, int> > v;
+	v.push_back(make_pair(1, 0));
+	v.push_back(make_pair(0, 1));
+	if(k>=2) {
+		for (int i = 0; i < k-1; i++) {
+			v.push_back(make_pair(v[i].first + v[i + 1].first, v[i].second + v[i + 1].second)); //점화식임
+		}
+	}
+	cout << v[k].first << " " << v[k].second;
+	return 0;
+}
