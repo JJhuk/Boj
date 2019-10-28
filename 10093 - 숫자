@@ -1,0 +1,35 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+//Generic Programming
+template<typename T1,typename T2>
+T1 max(T1 a, T2 b) {
+	return a > b ? a : b;
+ }
+
+template<typename T1, typename T2>
+T1 min(T1 a, T2 b) {
+	return a < b ? a : b;
+}
+
+int main() {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cout.tie(0);
+	long long a, b;
+	cin >> a >> b;
+	if (a == b || abs(b - a) == 1) {
+		cout << 0 << "\n";
+	}
+	else {
+		cout << abs(b - a) - 1 << "\n";
+		long long big = max(a, b);
+		long long small = min(a, b);
+
+		for (long long i = small + 1; i < big; i++) {
+			cout << i << " ";
+		}
+	}
+	return 0;
+}
