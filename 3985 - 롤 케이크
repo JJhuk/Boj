@@ -1,0 +1,42 @@
+#include <iostream>
+#include <cstring>
+#define MAX 1001 //index 0 not using
+//저의 컴퓨터를 살려주세요
+int cake[1000];
+using namespace std;
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	int length;
+	int test_case;
+	memset(cake, -1, sizeof(cake));	//-1은 사용하지 않거나, 선택받지 못한 친구들
+	cin >> length;	//케이크의 길이
+	cin >> test_case;	//사람들.. cake배열의 값이 사람의 번호임.
+	int ans_1 = 0;	//케이크를 가장 많이 받을 것 ‘같은’ 사람의 번호
+	int ans_1_val = 0;	//실제 값
+	int ans_2 = 0;	//케이크를 실제로 가장 많이 받은 사람의 번호
+	int ans_2_val = 0;
+	for (int i = 1; i <= test_case; i++) {
+		int a, b;
+		cin >> a >> b;
+		if (ans_1_val < b - a - 1) {
+			ans_1_val = b - a - 1;
+			ans_1 = i;
+		}
+		int cnt = 0;
+		for (int j = a; j <= b; j++) {
+			if (cake[j] == -1) {	//-1인 경우는 선택하지 않았거나/ 안쓰거니ㅏ
+				cnt++;
+				cake[j] = i;	
+			}
+		}
+		if (ans_2_val < cnt) {	//=을 안넣는 이유는 먼저 나온 친구가 답이기 때문
+			ans_2_val = cnt;
+			ans_2 = i;
+		}
+	}
+	cout << ans_1 << "\n" << ans_2;
+
+	return 0;
+}
