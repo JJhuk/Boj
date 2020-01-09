@@ -1,0 +1,33 @@
+#include <string>
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
+#include <vector>
+using namespace std;
+vector<int> v;
+int a;
+int b;
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cout.tie(0);
+	cin >> a;
+	for (int i = 0; i < a; i++) {
+		int temp;
+		cin >> temp;
+		v.push_back(temp);
+	}
+	sort(v.begin(), v.end());	//이진 탐색을 위해 sorting
+	cin >> b;
+	for (int i = 0; i < b; i++) {
+		int temp;
+		cin >> temp;	//찾아야 되는 값
+		if (binary_search(v.begin(), v.end(), temp)) {	//binary_serach가 true이면 찾은 것!
+			cout << 1 << "\n";
+		}
+		else {
+			cout << 0 << "\n";
+		}
+	}
+	return 0;
+}
