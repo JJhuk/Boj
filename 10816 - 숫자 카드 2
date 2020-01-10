@@ -1,0 +1,35 @@
+#include <map>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main(void) {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cout.tie(0);
+	map<int, int> m;
+	vector<int> input;
+	int n;
+	cin >> n;
+	//map은 레드블랙트리로 구현되어있는데
+	//log 복잡도 보장해주지만 상수가 너무큼
+	//그래서 매번 입력하면서 정렬하기 보단, 입력을 모아서 대입.
+	for (int i = 0; i < n; i++){
+		int temp;
+		cin >> temp;
+		input.push_back(temp);
+	}
+	for (int s : input) {
+		m[s]++;	//map은 배열index처럼 사용가능
+	}
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		int temp;
+		cin >> temp;
+		cout << m[temp] <<" ";
+	}
+	return 0;
+}
