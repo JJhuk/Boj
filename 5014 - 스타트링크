@@ -46,7 +46,7 @@ int main(void) {
 			}
 
 		}
-		if (cur_s - d >= 0) {
+		if (cur_s - d >= 1) {	//0 하면 틀림 0층은 없잖아?
 			if (!check[cur_s - d]) {
 				check[cur_s - d] = true;
 				q.push(make_pair(cur_s - d, cur_count + 1));
