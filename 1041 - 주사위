@@ -1,0 +1,50 @@
+
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+
+using namespace std;
+
+int main(void)
+{
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cout.tie(0);
+	long long N;
+	int dice[6];
+	cin >> N;
+	for(int i=0;i<6;i++)
+	{
+		cin >> dice[i];
+	}
+
+
+	long long sum = 0;
+	if(N==1)
+	{
+		sort(dice, dice + 6);
+		sum =(dice[0] + dice[1] + dice[2] + dice[3] + dice[4] );
+	}
+	else
+	{
+  //그냥 소팅하다가 머가리 꺠짐
+  //주어지는 수가 어떻게 이루어지는지 고
+		dice[0] =min(dice[0], dice[5]);
+		dice[1] =min(dice[1], dice[4]);
+		dice[2] =min(dice[2], dice[3]);
+		sort(dice, dice+3);
+		int min3 = dice[0] + dice[1] + dice[2];
+		int min2 = dice[0] + dice[1];
+		int min1 = dice[0];
+
+		long long n1 = (N - 1) * (N - 2) * 4 + (N - 2) * (N - 2);
+		long long n2 = (N - 1) * 4 + (N - 2) * 4;
+
+		sum += n1 * min1; //한면
+		sum += n2 * min2; //2면
+		sum += 4 * min3; //3면
+	}
+	cout << sum;
+	return 0;
+}
