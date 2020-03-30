@@ -1,0 +1,56 @@
+#include <iostream>
+#include <vector>
+#include <cstring>
+
+using namespace std;
+
+bool check[501];
+vector<int> v;
+void eratos(int n) {
+	memset(check, false, sizeof(check));
+	for (int i = 2; i <= n; i++) {
+		if (!check[i]) {
+			v.push_back(i);
+			for (int j = i * i; j <= n; j += i) {
+				check[j] = true;
+			}
+		}
+	}
+}
+
+int main(void)
+{
+	int n;
+	cin >> n;
+	eratos(n);
+	vector<int> soinsu;
+	for(int i=n;i>0;i--)
+	{
+		int now = i;
+		for(int j=0;now!=1;)
+		{
+			if(now%v[j]==0)
+			{
+				now /= v[j];
+				soinsu.push_back(v[j]);
+			}
+			else
+			{
+				j++;
+			}
+		}
+	}
+	int c1 = 0;//2의 갯수
+	int c2 = 0;//5의 갯수
+	for(int i=0;i<soinsu.size();i++)
+	{
+		if (soinsu[i] == 2)
+			c1++;
+		if (soinsu[i] == 5)
+			c2++;
+	}
+	c1 = c1 < c2 ? c1 : c2;
+	cout << c1;
+
+	return 0;
+}
