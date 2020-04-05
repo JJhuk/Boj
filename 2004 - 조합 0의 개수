@@ -1,0 +1,36 @@
+#include <iostream>
+
+typedef unsigned long long ull;
+
+using namespace std;
+
+pair<ull,ull> Get10(const ull &n)
+{
+	pair<ull, ull> temp = {};
+	for (ull i = 2; i <= n; i *= 2)
+	{
+		temp.first += n / i;
+	}
+	for (ull i = 5; i <= n; i *= 5)
+	{
+		temp.second += n / i;
+	}
+	return temp;
+}
+
+int main(void)
+{
+	ull n, m;
+	std::cin >> n >> m;
+
+
+	pair<ull, ull> n_10 = Get10(n);
+	pair<ull, ull> nr_10 = Get10(n - m > 0 ? n - m : m - n);
+	pair<ull, ull> r_10 = Get10(m);
+	
+	ull a = n_10.first - nr_10.first - r_10.first;
+	ull b = n_10.second - nr_10.second - r_10.second;
+	a = a < b ? a : b;
+	cout << a;
+	return 0;
+}
