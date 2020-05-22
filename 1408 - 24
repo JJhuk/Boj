@@ -1,0 +1,26 @@
+#include <cstdio>
+
+int main()
+{
+	int start[3], now[3];
+	scanf("%d:%d:%d", &start[0], &start[1], &start[2]);
+	scanf("%d:%d:%d", &now[0], &now[1], &now[2]);
+
+	start[2] += (start[0] * 3600) + (start[1] * 60);
+	now[2] += (now[0] * 3600) + (now[1] * 60);
+	
+	int lastTime = now[2] - start[2];
+
+	if (lastTime < 0)
+		lastTime += 24 * 60 * 60;
+	
+	int val[3];
+	val[0] = lastTime / 3600;
+	lastTime %= 3600;
+	val[1] = lastTime / 60;
+	lastTime %= 60;
+	val[2] = lastTime;
+	printf("%02d:%02d:%02d", val[0], val[1], val[2]);
+
+	return 0;
+}
