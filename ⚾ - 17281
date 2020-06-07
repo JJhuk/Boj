@@ -1,0 +1,153 @@
+#include <iostream>
+#include <stack>
+#include <vector>
+#include <algorithm>
+
+#define ONE 1
+#define TWO 2
+#define THREE 3
+#define HOMERUN 4
+#define OUT 0
+
+using namespace std;
+
+void Run(int num, bool* base, unsigned int *score)
+{
+	switch (num)
+	{
+	case ONE:
+		if (base[2])
+		{
+			base[2] = false;
+			(*score)++;
+		}
+		if (base[1])
+		{
+			base[1] = false;
+			base[2] = true;
+		}
+		if (base[0])
+		{
+			base[0] = false;
+			base[1] = true;
+		}
+		base[0] = true;
+		break;
+	case TWO:
+		if (base[2])
+		{
+			base[2] = false;
+			(*score)++;
+		}
+		if (base[1])
+		{
+			base[1] = false;
+			(*score)++;
+		}
+		if (base[0])
+		{
+			base[0] = false;
+			base[2] = true;
+		}
+		base[1] = true;
+		break;
+	case THREE:
+		if (base[2])
+		{
+			base[2] = false;
+			(*score)++;
+		}
+		if (base[1])
+		{
+			base[1] = false;
+			(*score)++;
+		}
+		if (base[0])
+		{
+			base[0] = false;
+			(*score)++;
+		}
+		base[2] = true;
+		break;
+	case HOMERUN:
+		unsigned int cnt = 0;
+		for (int i = 0; i < 3; i++)
+		{
+			if (base[i])
+			{
+				cnt++;
+				base[i] = false;
+			}
+		}
+		*score += (cnt + 1);
+		break;
+	}
+}
+
+int main(void)
+{
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cout.tie(0);
+	int inning;
+	cin >> inning;
+
+	int arr[51][10];
+	
+	//0부터
+	for (int i = 0; i < inning; i++)
+	{
+		for (int j = 0; j < 9; j++)
+		{
+			cin >> arr[i][j];
+		}
+	}
+
+	vector<int> v = { 0,1,2,3,4,5,6,7,8 };
+	unsigned int max_score = 0;
+	do
+	{
+		if (v[3] == 0)
+		{
+			unsigned int score = 0;
+			int idx = 0;
+			for (int now_inning = 0; now_inning < inning; now_inning++)
+			{
+				int out = 0;
+				bool base[3] = { false, false, false };
+				while (out != 3)
+				{
+					if (idx == 9)
+						idx = 0;
+					switch (arr[now_inning][v[idx++]])
+					{
+					case ONE:
+						Run(ONE, base, &score);
+						break;
+					case TWO:
+						Run(TWO, base, &score);
+						break;
+					case THREE:
+						Run(THREE, base, &score);
+						break;
+					case HOMERUN:
+						Run(HOMERUN, base, &score);
+						break;
+					case OUT:
+						out++;
+						break;
+					}
+				}
+				out = 0; //3아웃 체인지
+			}
+			if (max_score < score)
+			{
+				max_score = score;
+			}
+		}
+	} while (next_permutation(v.begin(), v.end()));
+	
+	
+	cout << max_score;
+	return 0;
+}
